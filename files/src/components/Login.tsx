@@ -66,7 +66,7 @@ const Login: React.FC = () => {
             <button type="submit" className="login-button">Submit</button>
 
             <div className="create-account">
-              <a href="#">Create Account</a>
+              <a href="/Register">Create Account</a>
             </div>
           </form>
         </div>
