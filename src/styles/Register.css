@@ -1,0 +1,118 @@
+.register-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.register-container {
+    display: flex;
+    width: 60%;
+    height: 70%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* left section */
+.welcome-section {
+    flex: 1;
+    background: linear-gradient(45deg, #7b2ff7, #ff00c8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+    padding: 40px;
+}
+
+.welcome-title {
+    font-size: 32px;
+    font-family: "Zen Antique", serif;
+    font-weight: 600;
+    font-style: normal;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.welcome-subtitle {
+    font-size: 22px;
+    font-family: "Zen Antique", serif;
+    font-weight: 400;
+    font-style: normal;
+    opacity: 0.8;
+}
+
+/* right section */
+.form-section {
+    flex: 1;
+    background-color: #ffffff;
+    padding: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.register-form {
+    width: 100%;
+}
+
+.register-greeting {
+    font-size: 38px;
+    font-family: "Zen Antique", serif;
+    font-weight: 600;
+    font-style: normal;
+    margin-bottom: 10px;
+}
+
+.register-subheading {
+    font-size: 22px;
+    font-family: "Zen Antique", serif;
+    font-weight: 500;
+    font-style: normal;
+    color: #6b6b6b;
+    margin-bottom: 5px;
+}
+
+.register-title {
+    font-size: 20px;
+    font-family: "Zen Antique", serif;
+    font-weight: 600;
+    font-style: normal;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    font-size: 16px;
+}
+
+.register-input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.register-button {
+    width: 100%;
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.already-account {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.already-account a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
