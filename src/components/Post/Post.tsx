@@ -12,38 +12,39 @@ interface PostProps {
   postImage: string;
   likes: number;
   timestamp: string;
+  onImageClick?: () => void; // Funkcja opcjonalna do obsługi kliknięcia na obraz
 }
 
-const Post: React.FC<PostProps> = ({ user, postImage, likes, timestamp }) => {
-    return (
-        <div className="post">
-          <div className="post__header">
-            <div className="post__headerAuthor">
-              <Avatar style={{ marginRight: "10px" }}>
-                {user.charAt(0).toUpperCase()}
-              </Avatar>{" "}
-              {user} • <span>{timestamp}</span>
-            </div>
-            <MoreHorizIcon />
+const Post: React.FC<PostProps> = ({ user, postImage, likes, timestamp, onImageClick }) => {
+  return (
+    <div className="post">
+      <div className="post__header">
+        <div className="post__headerAuthor">
+          <Avatar style={{ marginRight: "10px" }}>
+            {user.charAt(0).toUpperCase()}
+          </Avatar>{" "}
+          {user} • <span>{timestamp}</span>
+        </div>
+        <MoreHorizIcon />
+      </div>
+      <div className="post__image" onClick={onImageClick} style={{ cursor: onImageClick ? "pointer" : "default" }}>
+        <img src={postImage} alt="Post Image" />
+      </div>
+      <div className="post__footer">
+        <div className="post__footerIcons">
+          <div className="post__iconsMain">
+            <FavoriteBorderIcon className="postIcon" />
+            <ChatBubbleOutlineIcon className="postIcon" />
+            <TelegramIcon className="postIcon" />
           </div>
-          <div className="post__image">
-            <img src={postImage} alt="Post Image" />
-          </div>
-          <div className="post__footer">
-            <div className="post__footerIcons">
-              <div className="post__iconsMain">
-                <FavoriteBorderIcon className="postIcon" />
-                <ChatBubbleOutlineIcon className="postIcon" />
-                <TelegramIcon className="postIcon" />
-              </div>
-              <div className="post__iconSave">
-                <BookmarkBorderIcon className="postIcon" />
-              </div>
-            </div>
-            Liked by {likes} people.
+          <div className="post__iconSave">
+            <BookmarkBorderIcon className="postIcon" />
           </div>
         </div>
-      );
-    }
+        Liked by {likes} people.
+      </div>
+    </div>
+  );
+};
 
 export default Post;
