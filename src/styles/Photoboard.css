@@ -1,61 +1,93 @@
 .photoboard {
-    display: flex;
-    flex-direction: row;
-  }
-  
-  .photoboard__left {
-    flex: 0.7;
-  }
-  
-  .photoboard__right {
-    flex: 0.3;
-  }
-  
-  .modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  
-  .modal__overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.6);
-  }
-  
-  .modal__content {
-    background: rgb(0, 0, 0);
-    border-radius: 10px;
-    padding: 20px;
-    position: relative;
-    max-width: 600px;
-    width: 90%;
-  }
-  
-  .modal__close {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-  }
-  
-  .modal__image {
-    width: 100%;
-    border-radius: 10px;
-  }
-  
-  .modal__details {
-    margin-top: 20px;
-  }
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.photoboard__left {
+  flex: 0.7;
+}
+
+.photoboard__right {
+  flex: 0.3;
+}
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+}
+
+.modal__content {
+  position: relative;
+  display: flex; /* Układ jako flexbox */
+  gap: 20px; /* Odstęp między kolumnami */
+  max-width: 60%; /* Zwiększenie szerokości o 25% (900px * 1.25) */
+  width: 90%; /* Utrzymanie responsywności */
+  background-color: #000000; /* Tło modalu */
+  padding: 25px; /* Większe wypełnienie dla lepszego wyglądu */
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  z-index: 1001; /* Wyższy z-index niż overlay */
+}
+
+.modal__image-wrapper {
+  flex: 1; /* Obraz zajmuje jedną część szerokości */
+}
+
+.modal__image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover; /* Zapewnia odpowiednie dopasowanie obrazu */
+}
+
+.modal__details-wrapper {
+  flex: 1; /* Szczegóły zajmują jedną część szerokości */
+  overflow-y: auto; /* Przewijanie pionowe dla szczegółów */
+}
+
+.modal__details-wrapper h2 {
+  margin-top: 0;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.modal__details-wrapper p {
+  margin-bottom: 10px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.modal__close {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #ffffff;
+  z-index: 1002;
+}
+
+.modal__close:hover {
+  color: #555;
+}
+
