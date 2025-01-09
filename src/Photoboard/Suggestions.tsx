@@ -1,6 +1,6 @@
 import React from "react";
 import { Avatar } from "@mui/material";
-import "./Suggestions.css";
+import "../styles/Suggestions.css";
 
 const Suggestions: React.FC = () => {
   const suggestions = [
