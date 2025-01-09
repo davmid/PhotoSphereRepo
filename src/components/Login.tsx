@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
-import { signInWithEmailAndPassword } from 'firebase/auth'; // Import Firebase function
-import { auth } from '../services/firebaseConfig'; // Your Firebase configuration file
+import { useNavigate } from 'react-router-dom';
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { auth } from '../services/firebaseConfig';
 import '../styles/Login.css';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [error, setError] = useState<string | null>(null); // State for handling errors
-  const [loading, setLoading] = useState<boolean>(false); // State for loading indicator
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -19,20 +21,18 @@ const Login: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setError(null); // Reset error state
-    setLoading(true); // Show loading state
+    setError(null);
+    setLoading(true);
 
     try {
-      // Sign in the user using Firebase Authentication
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       console.log('User logged in:', userCredential.user);
-      alert('Login successful!'); // Display success message
+      navigate('/main');
     } catch (error: any) {
-      // Handle Firebase authentication errors
       setError(error.message);
       console.error('Error during login:', error);
     } finally {
-      setLoading(false); // Stop loading state
+      setLoading(false);
     }
   };
 
@@ -50,8 +50,8 @@ const Login: React.FC = () => {
             <p className="login-subheading">Good Morning</p>
             <h3 className="login-title">Log In to Your Account</h3>
 
-            {error && <p className="error-message">{error}</p>} {/* Display error messages */}
-            
+            {error && <p className="error-message">{error}</p>}
+
             <div className="form-group">
               <label htmlFor="email">Email Address</label>
               <input
