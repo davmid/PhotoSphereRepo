@@ -135,27 +135,31 @@ const Photoboard: React.FC = () => {
         <Suggestions />
       </div>
       {selectedPost && (
-        <div className="modal">
-          <div className="modal__overlay" onClick={closeModal}></div>
-          <div className="modal__content">
-            <button className="modal__close" onClick={closeModal}>
-              &times;
-            </button>
-            <img
-              className="modal__image"
-              src={selectedPost.postImage}
-              alt="Post"
-            />
-            <PhotoDetails
-              user={selectedPost.user}
-              description={selectedPost.description}
-              likes={selectedPost.likes}
-              timestamp={selectedPost.timestamp}
-              comments={selectedPost.comments}
-            />
-          </div>
-        </div>
-      )}
+  <div className="modal">
+    <div className="modal__overlay" onClick={closeModal}></div>
+    <div className="modal__content">
+      <button className="modal__close" onClick={closeModal}>
+        &times;
+      </button>
+      <div className="modal__image-wrapper">
+        <img
+          className="modal__image"
+          src={selectedPost.postImage}
+          alt="Post"
+        />
+      </div>
+      <div className="modal__details-wrapper">
+        <PhotoDetails
+          user={selectedPost.user}
+          description={selectedPost.description}
+          likes={selectedPost.likes}
+          timestamp={selectedPost.timestamp}
+          comments={selectedPost.comments}
+        />
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 };
