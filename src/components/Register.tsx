@@ -39,17 +39,15 @@ const Register: React.FC = () => {
     }
 
     try {
-      // Create user with email and password
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Update the user's profile with their name
       await updateProfile(user, { displayName: name });
 
       console.log('User registered successfully:', user);
-      alert('Registration successful!'); // Replace with navigation if needed
+      alert('Registration successful!');
     } catch (err: any) {
-      setError(err.message); // Show Firebase error messages
+      setError(err.message);
       console.error('Error during registration:', err);
     } finally {
       setLoading(false);
