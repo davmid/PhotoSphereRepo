@@ -15,7 +15,7 @@
     overflow: hidden;
 }
 
-/* left section */
+
 .welcome-section {
     flex: 1;
     background: linear-gradient(45deg, #7b2ff7, #ff00c8);
@@ -44,7 +44,7 @@
     opacity: 0.8;
 }
 
-/* right section */
+
 .form-section {
     flex: 1;
     background-color: #ffffff;

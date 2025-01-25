@@ -15,7 +15,7 @@ interface PostData {
   likes: number;
   timestamp: string;
   description?: string;
-  comments?: Comment[]; // Opcjonalna lista komentarzy
+  comments?: Comment[]; 
 }
 
 const Photoboard: React.FC = () => {

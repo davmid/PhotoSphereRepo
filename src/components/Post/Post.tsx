@@ -12,7 +12,7 @@ interface PostProps {
   postImage: string;
   likes: number;
   timestamp: string;
-  onImageClick?: () => void; // Funkcja opcjonalna do obsługi kliknięcia na obraz
+  onImageClick?: () => void; 
 }
 
 const Post: React.FC<PostProps> = ({ user, postImage, likes, timestamp, onImageClick }) => {

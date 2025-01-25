@@ -35,31 +35,31 @@
 
 .modal__content {
   position: relative;
-  display: flex; /* Układ jako flexbox */
-  gap: 20px; /* Odstęp między kolumnami */
-  max-width: 60%; /* Zwiększenie szerokości o 25% (900px * 1.25) */
-  width: 90%; /* Utrzymanie responsywności */
-  background-color: #000000; /* Tło modalu */
-  padding: 25px; /* Większe wypełnienie dla lepszego wyglądu */
+  display: flex; 
+  gap: 20px; 
+  max-width: 60%;
+  width: 90%; 
+  background-color: #000000; 
+  padding: 25px; 
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
-  z-index: 1001; /* Wyższy z-index niż overlay */
+  z-index: 1001; 
 }
 
 .modal__image-wrapper {
-  flex: 1; /* Obraz zajmuje jedną część szerokości */
+  flex: 1; 
 }
 
 .modal__image {
   width: 100%;
   height: auto;
   border-radius: 8px;
-  object-fit: cover; /* Zapewnia odpowiednie dopasowanie obrazu */
+  object-fit: cover;
 }
 
 .modal__details-wrapper {
-  flex: 1; /* Szczegóły zajmują jedną część szerokości */
-  overflow-y: auto; /* Przewijanie pionowe dla szczegółów */
+  flex: 1; 
+  overflow-y: auto; 
 }
 
 .modal__details-wrapper h2 {
