@@ -132,7 +132,6 @@ const Photoboard: React.FC = () => {
         </div>
       </div>
       <div className="photoboard__right">
-        <Suggestions />
       </div>
       {selectedPost && (
   <div className="modal">

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/CreatePost.css";
+import Sidenav from "../navigation/Sidenav";
 
 const CreatePost: React.FC = () => {
     const [formData, setFormData] = useState({
@@ -24,7 +25,9 @@ const CreatePost: React.FC = () => {
     };
   
     return (
-      <div className="create-post">
+      <div>
+        <Sidenav></Sidenav>
+        <div className="create-post">
         <h2>Create a New Post</h2>
         <div className="create-post__container">
           <div className="image-preview">
@@ -82,6 +85,7 @@ const CreatePost: React.FC = () => {
             </button>
           </form>
         </div>
+      </div>
       </div>
     );
   };

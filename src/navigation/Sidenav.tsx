@@ -1,14 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../styles/Sidenav.css";
-import HomeIcon from "@mui/icons-material/Home";
-import SearchIcon from "@mui/icons-material/Search";
+import "./Sidenav.css";
+import PetsIcon from '@mui/icons-material/Pets';
+import ForestIcon from '@mui/icons-material/Forest';
 import ExploreIcon from "@mui/icons-material/Explore";
-import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
-import MenuIcon from "@mui/icons-material/Menu";
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import AddIcon from '@mui/icons-material/Add';
+import { Category } from "../types/interfaces";
+
 
 const Sidenav: React.FC = () => {
   const navigate = useNavigate();
+
+  // Kategorie z ikonami i ścieżkami
+  const [categories] = useState<Category[]>([
+    { name: "Animals",color: "#FFB6C1", path: "/main", icon: <PetsIcon /> },
+    { name: "Nature", color: "#98FB98", path: "/search", icon: <ForestIcon /> },
+    { name: "Car", color: "#ADD8E6", path: "/explore", icon: <DirectionsCarIcon /> },
+    { name: "Exploring", color: "#FFDA89", path: "/create", icon: <ExploreIcon /> },
+  ]);
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -16,32 +26,23 @@ const Sidenav: React.FC = () => {
 
   return (
     <div className="sidenav">
-      <h3 className="sidenav_logo">PhotoSphere</h3>
-
+      <h3 className="sidenav_category">Categories</h3>
       <div className="sidenav__buttons">
-        <button className="sidenav__button" onClick={() => handleNavigation("/main")}>
-          <HomeIcon />
-          <span>Home</span>
-        </button>
-        <button className="sidenav__button" onClick={() => handleNavigation("/search")}>
-          <SearchIcon />
-          <span>Search</span>
-        </button>
-        <button className="sidenav__button" onClick={() => handleNavigation("/explore")}>
-          <ExploreIcon />
-          <span>Explore</span>
-        </button>
-        <button className="sidenav__button" onClick={() => handleNavigation("/create")}>
-          <AddCircleOutlineIcon />
-          <span>Create</span>
-        </button>
+        {categories.map((category, index) => (
+          <button
+            key={index}
+            className="sidenav__button"
+            onClick={() => handleNavigation(category.path)}
+            style={{backgroundColor: category.color}}
+          >
+            {category.icon}
+            <span>{category.name}</span>
+          </button>
+        ))}
       </div>
-      <div className="sidenav__more">
-        <button className="sidenav__button">
-          <MenuIcon />
-          <span className="sidenav__buttonText">More</span>
-        </button>
-      </div>
+      <button className="floating-button">
+        <AddIcon />
+      </button>
     </div>
   );
 };

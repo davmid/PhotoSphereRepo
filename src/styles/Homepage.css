@@ -1,13 +1,23 @@
-.homepage {
+.homepage{
   display: flex;
   flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
 }
 
-.homepage__navWraper {
+.homepage__navWraper{
+  max-width: 160px;
   position: relative;
   flex: 0.2;
 }
 
-.homepage__timeline {
+.homepage__pinboard{
   flex: 0.8;
+}
+
+
+.container_navbar{
+  width: 100%;
+  min-height: 100vh;
+  background: #ced8ff;
 }
