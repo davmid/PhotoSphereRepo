@@ -1,7 +1,7 @@
 import * as React from "react";
 import "../styles/Pin.css";
 import { PinData } from "../../types/interfaces";
-import { Avatar, IconButton } from "@mui/material";
+import { Avatar } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import InfoIcon from "@mui/icons-material/Info";

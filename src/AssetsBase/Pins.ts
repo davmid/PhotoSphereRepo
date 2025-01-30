@@ -78,4 +78,56 @@ export const examplePin: PinData[] = [
         { user: "johndoe", text: "This is breathtaking." },
       ],
     },
+    {
+      user: "Anna",
+      postImage:
+        "https://psipark.pl/wp-content/uploads/2023/12/jaki-opis-do-zdjecia-psa.png",
+      size: "medium",
+      likes: 32,
+      timestamp: "1d",
+      description: "Coffee and books - perfect morning.",
+      comments: [
+        { user: "booklover", text: "I love this vibe!" },
+        { user: "coffeelover", text: "Nothing better than a cup of coffee ☕" },
+      ],
+    },
+    {
+      user: "Michael",
+      postImage:
+        "https://bobraz.pl/res/photos/a5/zdjecie-biometryczne_1289_l.webp",
+      size: "small",
+      likes: 27,
+      timestamp: "5h",
+      description: "City lights at night 🌃",
+      comments: [
+        { user: "urbanlife", text: "Stunning shot!" },
+        { user: "photofan", text: "Where was this taken?" },
+      ],
+    },
+    {
+      user: "Emily",
+      postImage:
+        "https://www.swiatobrazu.pl/zdjecie/artykuly/550890/wiewiorka.png",
+      size: "large",
+      likes: 45,
+      timestamp: "3h",
+      description: "Beach sunsets are the best 🌅",
+      comments: [
+        { user: "beachlover", text: "I need a vacation now!" },
+        { user: "wanderlust", text: "Golden hour at its finest." },
+      ],
+    },
+    {
+      user: "John",
+      postImage:
+        "https://waskiel.pl/wp-content/uploads/2019/11/pomysly-na-zdjecia-obraz-wyrozniajacy.jpg",
+      size: "medium",
+      likes: 18,
+      timestamp: "6h",
+      description: "Nature walk in the forest 🌲",
+      comments: [
+        { user: "hiker", text: "Looks so peaceful!" },
+        { user: "wildlife", text: "Did you see any animals?" },
+      ],
+    },
 ];
