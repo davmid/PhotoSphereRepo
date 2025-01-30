@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import "../styles/CreatePost.css";
-import Sidenav from "../navigation/Sidenav";
+import "./styles/CreatePost.css";
+import Sidenav from "./navigation/Sidenav";
 
 const CreatePost: React.FC = () => {
     const [formData, setFormData] = useState({

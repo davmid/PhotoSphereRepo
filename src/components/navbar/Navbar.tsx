@@ -2,16 +2,10 @@ import React from 'react'
 import './Navbar.css'
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
-import { User } from '../../types/interfaces';
+import { exampleUsers } from '../../AssetsBase/Users';
 
-const exampleUser: User = {
-  name: "Jan Kowalski",
-  email: "jan.kowalski@example.com",
-  id: 1,
-  avatarUrl: "https://example.com/avatar.jpg",
-  role: "user",
-  createdAt: new Date(),
-};
+const userId = 1;
+const loggedUser = exampleUsers.find(user => user.id === userId);
 
 const Navbar: React.FC = () => {
   return (
@@ -29,7 +23,7 @@ const Navbar: React.FC = () => {
         <li>Account</li>
       </ul>
     <div className='userWellcoming'>
-      Witaj, {exampleUser.name}
+      Witaj, {loggedUser?.name}
       <div className="user-icon">
           <PersonIcon />
         </div>

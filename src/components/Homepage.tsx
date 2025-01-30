@@ -1,8 +1,8 @@
 import React from "react";
-import "../styles/Homepage.css";
-import Sidenav from "../navigation/Sidenav";
-import Photoboard from "../Photoboard/Photoboard";
+import "./styles/Homepage.css";
+import Sidenav from "./navigation/Sidenav";
 import Navbar from './navbar/Navbar'
+import PinBoard from "./Photoboard/PinBoard";
 
 const Homepage: React.FC = () => {
   return (
@@ -13,7 +13,8 @@ const Homepage: React.FC = () => {
             <Sidenav/>
           </div>
           <div className="homepage__pinboard">
-            <Photoboard />
+            {/* <Photoboard /> */}
+            { <PinBoard />}
           </div>
         </div>
         </div>

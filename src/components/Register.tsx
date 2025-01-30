@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../services/firebaseConfig';
-import '../styles/Register.css';
+import './styles/Register.css';
 
 const Register: React.FC = () => {
   const [name, setName] = useState<string>('');

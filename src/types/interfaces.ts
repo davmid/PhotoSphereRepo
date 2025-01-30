@@ -1,3 +1,5 @@
+import React from "react";
+
 export interface User {
     name: string;
     email: string;
@@ -11,7 +13,20 @@ export interface User {
     name: string;
     color: string;
     path: string;
-    icon: JSX.Element;
+    icon: React.ElementType;
   }
 
-  export {};
+  export interface Comment {
+    user: string;
+    text: string;
+  }
+  
+  export interface PinData {
+    user: string;
+    postImage: string;
+    size: string;
+    likes: number;
+    timestamp: string | Date;
+    description?: string;
+    comments?: Comment[]; 
+  }
