@@ -10,6 +10,9 @@
 .logo{
     padding: 10px;
     cursor: pointer;
+    max-width: 90px;
+    justify-content: center;
+    margin-left: 15px;
 }
 
 ul{
