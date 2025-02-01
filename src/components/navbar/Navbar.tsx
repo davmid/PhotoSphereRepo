@@ -3,7 +3,7 @@ import './Navbar.css'
 import SearchIcon from '@mui/icons-material/Search';
 import PersonIcon from '@mui/icons-material/Person';
 import { exampleUsers } from '../../AssetsBase/Users';
-import logo from '../../photos/IGCLONE.png';
+import logo from '../../photos/OURLOGO.png';
 
 const userId = 2;
 const loggedUser = exampleUsers.find(user => user.id === userId);
