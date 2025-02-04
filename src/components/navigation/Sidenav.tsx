@@ -28,7 +28,7 @@ const Sidenav: React.FC = () => {
           </button>
         ))}
       </div>
-      <button className="floating-button">
+      <button className="floating-button" onClick={() => handleNavigation("/create")}>
         <AddIcon />
       </button>
     </div>

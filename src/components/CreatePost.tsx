@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles/CreatePost.css";
 import Sidenav from "./navigation/Sidenav";
+import Navbar from "./navbar/Navbar";
 import { storage, db } from "../services/firebaseConfig";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { collection, addDoc } from "firebase/firestore";
@@ -81,9 +82,14 @@ const CreatePost: React.FC = () => {
 };
 
 
-  return (
-    <div>
-      <Sidenav />
+return (
+  <div className="container_navBar">
+    <Navbar />
+    <div className="homepage">
+      <div className="homepage__navWraper">
+        <Sidenav/>
+      </div>
+      <div className="homepage__pinboard">
       <div className="create-post">
         <h2>Create a New Post</h2>
         <div className="create-post__container">
@@ -120,8 +126,10 @@ const CreatePost: React.FC = () => {
           )}
         </div>
       </div>
+      </div>
     </div>
-  );
+    </div>
+);
 };
 
 export default CreatePost;

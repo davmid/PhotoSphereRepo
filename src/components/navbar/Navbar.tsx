@@ -4,9 +4,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import PersonIcon from "@mui/icons-material/Person";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logo from "../../photos/OURLOGO.png";
+import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
 
   useEffect(() => {
     const auth = getAuth();
@@ -18,7 +24,7 @@ const Navbar: React.FC = () => {
 
   return (
     <div className="navbar">
-      <img src={logo} alt="Logo" className="logo" />
+      <img src={logo} alt="Logo" className="logo" onClick={() => handleNavigation("/main")} />
 
       <div className="search-box">
         <input type="text" placeholder="Search" />
