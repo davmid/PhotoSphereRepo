@@ -83,13 +83,13 @@ const CreatePost: React.FC = () => {
 
 
 return (
-  <div className="container_navBar">
+  <div>
     <Navbar />
-    <div className="homepage">
-      <div className="homepage__navWraper">
+    <div className="createpage">
+      <div className="container__navWraper">
         <Sidenav/>
       </div>
-      <div className="homepage__pinboard">
+      <div className="container__create">
       <div className="create-post">
         <h2>Create a New Post</h2>
         <div className="create-post__container">
@@ -118,8 +118,9 @@ return (
                 />
               </div>
               <button type="submit" className="create-post__button" disabled={uploading}>
+                <span className="text">{uploading ? "Uploading..." : "Create Post"}</span>
+                </button>
                 {uploading ? "Uploading..." : "Create Post"}
-              </button>
             </form>
           ) : (
             <p>Please log in to create a post.</p>

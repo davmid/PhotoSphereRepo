@@ -34,12 +34,11 @@ const Navbar: React.FC = () => {
       </div>
 
       <ul>
-        <li>Home</li>
-        <li>Account</li>
+        <li>Logout</li>
       </ul>
 
-      <div className="userWellcoming">
-        Witaj, {user ? user.displayName || "Anonymous" : "Guest"}
+      <div className="userWellcoming" onClick={() => handleNavigation("/account")} >
+        Welcome, {user ? user.displayName || "Anonymous" : "Guest"}
         <div className="user-icon">
           <PersonIcon />
         </div>

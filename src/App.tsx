@@ -5,6 +5,7 @@ import Login from "./components/Login";
 import Register from "./components/Register";
 import Homepage from "./components/Homepage";
 import CreatePost from "./components/CreatePost"
+import Account from "./components/Account";
 
 const App: React.FC = () => {
   return (
@@ -15,6 +16,7 @@ const App: React.FC = () => {
           <Route path="/register" element={<Register />} />
           <Route path="/main" element={<Homepage />} />
           <Route path="/create" element={<CreatePost />} />
+          <Route path="/account" element={<Account />} />
         </Routes>
       </Router>
     </div>

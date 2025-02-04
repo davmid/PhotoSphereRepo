@@ -66,6 +66,7 @@ ul li{
 }
 
 .userWellcoming{
+    cursor: pointer;
     margin:  10px 20px;
     font-size: 18px;
     font-weight: bold;
