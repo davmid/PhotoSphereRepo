@@ -1,80 +1,33 @@
-import * as React from "react";
-import "../styles/Pin.css";
-import { PinData } from "../../types/interfaces";
-import { Avatar } from "@mui/material";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
-import InfoIcon from "@mui/icons-material/Info";
+import React from 'react';
+import '../styles/Pin.css';
 
-const Pin: React.FC<{ pin: PinData }> = ({ pin }) => {
-  const timestampDate =
-    typeof pin.timestamp === "string" ? new Date(pin.timestamp) : pin.timestamp;
+interface PinProps {
+    pin: {
+        postImage: string;
+        username: string;
+        description: string;
+    };
+}
 
-  const [isHovered, setIsHovered] = React.useState(false);
+const Pin: React.FC<PinProps> = ({ pin }) => {
+    console.log("Rendering Pin:", pin); // Debugging
 
-  return (
-    <div
-      className={`pin ${pin.size}`}
-      onMouseEnter={() => setIsHovered(true)}
-    
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Zdjęcie na pełny obszar */}
-      <img src={pin.postImage} alt={pin.description || "Pinned image"} className="pin__image" />
-
-      {isHovered && (
-        <div className="pin__likes">
-            <span>Likes: {pin.likes}</span>
-        </div>
-      )}
-      
-
-      {isHovered && (
-        <div className="pin__overlay">
-          <div className="pin__author">
-            <Avatar className="pin__avatar">{pin.user.charAt(0).toUpperCase()}</Avatar>
-            <div className="pin__author-info">
-              <span className="pin__author-name">{pin.user}</span>
-              <span className="pin__timestamp">{timestampDate.toLocaleDateString()}</span>
+    return (
+        <div className="pin">
+            <img
+                src={pin.postImage || "https://via.placeholder.com/300"}
+                alt="Uploaded post"
+                className="pin__image"
+                onError={(e) => {
+                    e.currentTarget.src = "https://via.placeholder.com/300";
+                }}
+            />
+            <div className="pin__info">
+                <h3>{pin.username}</h3>
+                <p>{pin.description}</p>
             </div>
-          </div>
         </div>
-      )}
-
-
-      {isHovered && (
-        <div className="pin__buttons">
-          <button  className="pin__button">
-            <InfoIcon />
-          </button >
-          <button  className="pin__button">
-            <BookmarkBorderIcon />
-          </button >
-          <button  className="pin__button">
-            <FavoriteBorderIcon />
-          </button >
-        </div>
-        
-      )}
-    </div>
-  );
+    );
 };
 
 export default Pin;
-
-
-
-// import * as React from 'react';
-// import '../styles/Pin.css';
-// import { PinData } from '../../types/interfaces';
-
-// const Pin: React.FC<{ pin: PinData }> = ({ pin }) => {
-//     return (
-//         <div className={`pin ${pin.size}`}>
-//             <img src={pin.postImage} alt={pin.description || "Pinned image"} className="pin__image" />
-//             {pin.description && <p className="pin__description">{pin.description}</p>}
-//         </div>
-//     );
-// };
-
-// export default Pin;
