@@ -1,16 +1,27 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Sidenav.css";
 import AddIcon from '@mui/icons-material/Add';
 import { categories } from '../../AssetsBase/Categories'
+import { auth } from '../../services/firebaseConfig';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 
 const Sidenav: React.FC = () => {
   const navigate = useNavigate();
+  const [user, setUser] = useState<any>(null);
 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
+
+  useEffect(() => {
+      const auth = getAuth();
+      const unsubscribe = onAuthStateChanged(auth, (loggedInUser) => {
+        setUser(loggedInUser);
+      });
+      return () => unsubscribe();
+    }, []);
 
   return (
     <div className="sidenav">
@@ -28,9 +39,13 @@ const Sidenav: React.FC = () => {
           </button>
         ))}
       </div>
-      <button className="floating-button" onClick={() => handleNavigation("/create")}>
-        <AddIcon />
-      </button>
+      {user ? (
+        <button className="floating-button" onClick={() => handleNavigation("/create")}>
+          <AddIcon />
+        </button>
+      ):(
+        <div></div>
+      )};
     </div>
   );
 };

@@ -1,35 +1,47 @@
-.navbar{
-    width:5 0%;
+.navbar {
+    width: 100%;
     display: flex;
-    align-items: center;
-    justify-content: space-between;
     background: #fff;
     color: black;
+    justify-content: space-between; /* Sprawia, że lewa część i prawa część są rozdzielone */
 }
 
-.logo{
+.logo {
+    display: flex;
     padding: 5px;
     cursor: pointer;
     max-width: 90px;
-    justify-content: center;
+    justify-content: left;
     margin-left: 20px;
 }
 
-ul{
+ul {
     flex: 1;
     list-style: none;
     text-align: right;
 }
 
-ul li{
+ul li {
     display: inline-block;
-    margin:  10px 20px;
+    margin: 10px 20px;
     font-size: 18px;
     cursor: pointer;
     font-weight: bold;
 }
 
-.search-box{
+.navbar_left {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+}
+
+.navbar_right {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.search-box {
     display: flex;
     margin-left: 50px;
     align-items: center;
@@ -38,26 +50,26 @@ ul li{
     border-radius: 50px;
 }
 
-.search-box input{
+.search-box input {
     padding: 6px;
     background: transparent;
     border: 0;
-    outline:  0;
+    outline: 0;
     color: #fff;
     font-size: 15px;
     max-width: 300px;
 }
 
-.search-box input::placeholder{
+.search-box input::placeholder {
     color: #fff;
 }
 
-.search-box img{
+.search-box img {
     width: 20px;
     cursor: pointer;
 }
 
-.search-box button{
+.search-box button {
     background: 0;
     border: 0;
     cursor: pointer;
@@ -65,14 +77,14 @@ ul li{
     width: 100%;
 }
 
-.userWellcoming{
+.userWellcoming {
+    display: flex;
     cursor: pointer;
-    margin:  10px 20px;
+    margin: 10px 20px;
     font-size: 18px;
     font-weight: bold;
-    display: flex;
     align-items: center;
-    gap: 10px; /* Odstęp między tekstem a ikoną */
+    gap: 10px;
 }
 
 .user-icon {
@@ -82,9 +94,9 @@ ul li{
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background-color: #ddd; /* Możesz zmienić na pasujący kolor */
-  }
-  
-  .user-icon svg {
+    background-color: #ddd;
+}
+
+.user-icon svg {
     font-size: 24px;
-  }
+}
