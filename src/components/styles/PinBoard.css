@@ -7,8 +7,6 @@
 }
 
 .pin {
-    background: #fff;
-    padding: 5px;
     text-align: center;
     break-inside: avoid;
 }

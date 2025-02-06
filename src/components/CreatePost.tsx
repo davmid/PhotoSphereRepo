@@ -64,6 +64,7 @@ const CreatePost: React.FC = () => {
         username: user.displayName || "Anonymous",
         postImage: imageUrl,
         description: formData.description,
+        likes: 0,
         timestamp: new Date(),
       });
 
@@ -93,17 +94,7 @@ const CreatePost: React.FC = () => {
             <h2>Create a New Post</h2>
             <div className="create-post__container">
               <div className="image-preview">
-                {file ? (
-                  <Pin
-                    pin={{
-                      postImage: URL.createObjectURL(file),
-                      username: user?.displayName || "Anonymous",
-                      description: formData.description,
-                    }}
-                  />
-                ) : (
                   <button className="image-placeholder">Image Preview</button>
-                )}
               </div>
 
               {user ? (

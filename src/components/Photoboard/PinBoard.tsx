@@ -8,6 +8,7 @@ const PinBoard: React.FC = () => {
     const [pins, setPins] = useState<Array<any>>([]);
     const [loading, setLoading] = useState(true);
 
+
     useEffect(() => {
         const fetchPosts = async () => {
             try {
@@ -20,7 +21,7 @@ const PinBoard: React.FC = () => {
                     description: doc.data().description || "No description"
                 }));
 
-                console.log("Fetched Posts:", postList); // Debugging
+                console.log("Fetched Posts:", postList);
                 setPins(postList);
             } catch (error) {
                 console.error("Error fetching posts:", error);
@@ -36,9 +37,12 @@ const PinBoard: React.FC = () => {
         <div className="pin_container">
             {loading ? <p>Loading posts...</p> : 
                 pins.length > 0 ? (
-                    pins.map((pin) => (
-                        <Pin key={pin.id} pin={pin} />
-                    ))
+                    pins.map((pin) => {
+                        const sizes = ["small", "medium", "large"];
+                        const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
+    
+                        return <Pin key={pin.id} pin={pin} randomSize={randomSize} />;
+                    })
                 ) : (
                     <p>No posts available.</p>
                 )}
