@@ -26,7 +26,6 @@ const Navbar: React.FC = () => {
     const queryParams = new URLSearchParams(searchParams);
     queryParams.set("user", searchUser.trim()); 
 
-    console.log("🔍 Updating search URL:", `?${queryParams.toString()}`);
     navigate(`?${queryParams.toString()}`, { replace: true }); // Update URL without reloading
   };
 

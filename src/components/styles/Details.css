@@ -1,7 +1,7 @@
 /* Ustawienie kontenera dla całej strony */
 .container {
     display: flex; /* Opcjonalnie, dodaje odstęp pomiędzy divami */
-  }
+}
   
 
 .detailspage {
@@ -189,3 +189,37 @@
     box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
     transform: translateY(0);
   }
+
+.delete-comment-btn {
+  background-color: #fa6400; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-comment-btn:hover {
+  background-color: #fb8332;
+  transform: translateY(-1px);
+}
+
+.delete-comment-btn:active {
+  background-color: #c85000;
+  transform: translateY(0);
+}
+
+.photo__comment {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px;
+  margin-bottom: 5px;
+}

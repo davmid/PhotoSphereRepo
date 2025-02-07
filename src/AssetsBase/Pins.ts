@@ -9,22 +9,7 @@ export const examplePin: PinData[] = [
       likes: 54,
       timestamp: "2d",
       description: "A beautiful tree in the sunset.",
-      comments: [
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-      ],
+      comments: [],
     },
     {
       user: "johndoe",
@@ -34,10 +19,7 @@ export const examplePin: PinData[] = [
       likes: 432,
       timestamp: "2d",
       description: "Nature at its best.",
-      comments: [
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-      ],
+      comments: [],
     },
     {
       user: "mariussss",
@@ -47,10 +29,7 @@ export const examplePin: PinData[] = [
       likes: 140,
       timestamp: "2d",
       description: "Captured on my phone.",
-      comments: [
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-      ],
+      comments: [],
     },
     {
       user: "kobee_18",
@@ -60,10 +39,7 @@ export const examplePin: PinData[] = [
       likes: 14,
       timestamp: "2d",
       description: "Basketball vibes!",
-      comments: [
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-      ],
+      comments: [],
     },
     {
       user: "Dawid",
@@ -73,10 +49,7 @@ export const examplePin: PinData[] = [
       likes: 14,
       timestamp: "2d",
       description: "Enjoying the view.",
-      comments: [
-        { user: "naturelover", text: "Wow, amazing view!" },
-        { user: "johndoe", text: "This is breathtaking." },
-      ],
+      comments: [],
     },
     {
       user: "Anna",
@@ -87,8 +60,6 @@ export const examplePin: PinData[] = [
       timestamp: "1d",
       description: "Coffee and books - perfect morning.",
       comments: [
-        { user: "booklover", text: "I love this vibe!" },
-        { user: "coffeelover", text: "Nothing better than a cup of coffee ☕" },
       ],
     },
     {
@@ -100,8 +71,6 @@ export const examplePin: PinData[] = [
       timestamp: "5h",
       description: "City lights at night 🌃",
       comments: [
-        { user: "urbanlife", text: "Stunning shot!" },
-        { user: "photofan", text: "Where was this taken?" },
       ],
     },
     {
@@ -113,8 +82,6 @@ export const examplePin: PinData[] = [
       timestamp: "3h",
       description: "Beach sunsets are the best 🌅",
       comments: [
-        { user: "beachlover", text: "I need a vacation now!" },
-        { user: "wanderlust", text: "Golden hour at its finest." },
       ],
     },
     {
@@ -126,8 +93,6 @@ export const examplePin: PinData[] = [
       timestamp: "6h",
       description: "Nature walk in the forest 🌲",
       comments: [
-        { user: "hiker", text: "Looks so peaceful!" },
-        { user: "wildlife", text: "Did you see any animals?" },
       ],
     },
 ];

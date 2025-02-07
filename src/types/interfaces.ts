@@ -17,6 +17,8 @@ export interface User {
   }
 
   export interface Comment {
+    id: string;
+    userId: string;
     user: string;
     text: string;
   }

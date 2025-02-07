@@ -1,80 +1,91 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
-import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useLocation } from "react-router-dom";
 import "./styles/Details.css";
 import Navbar from "./navbar/Navbar";
 import Sidenav from "./navigation/Sidenav";
+import { Comment } from "../types/interfaces"; // Ensure this file contains the correct Comment interface
 
 const Details: React.FC = () => {
   const location = useLocation();
-  const pin = location.state?.pin;  // Pobieramy pin z przekazanych danych
-  const [comments, setComments] = useState<{ username: string; text: string }[]>([]);
+  const pin = location.state?.pin; // Pobieramy pin z przekazanych danych
+  const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [user, setUser] = useState<any>(null);  // Dodajemy stan dla użytkownika
-  const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date(); 
+  const [user, setUser] = useState<any>(null); // Dodajemy stan dla użytkownika
+  const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date();
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
-
     return () => unsubscribe();
-  }, [pin]);
+  }, []);
 
   const loadComments = async () => {
+    if (!pin?.id) return;
     try {
       const querySnapshot = await getDocs(
-        query(collection(db, "comments"), where("pinId", "==", pin?.id))
+        query(collection(db, "comments"), where("pinId", "==", pin.id))
       );
-      const fetchedComments: { username: string; text: string }[] = [];
-      querySnapshot.forEach((doc) => {
-        fetchedComments.push(doc.data() as { username: string; text: string });
-      });
+      
+      const fetchedComments = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...(doc.data() as Omit<Comment, "id">),
+      }));
+
       setComments(fetchedComments);
     } catch (error) {
       console.error("Error loading comments:", error);
-      alert("Wystąpił błąd podczas ładowania komentarzy.");
+      alert("An error occurred while loading comments.");
     }
   };
 
-  const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setNewComment(e.target.value);
+  const handleDeleteComment = async (commentId: string, commentUserId: string) => {
+    if (!user || user.uid !== commentUserId) {
+      alert("You can only delete your own comments!");
+      return;
+    }
+    try {
+      await deleteDoc(doc(db, "comments", commentId));
+      loadComments();
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+      alert("An error occurred while deleting the comment.");
+    }
   };
 
   useEffect(() => {
     // Ładowanie komentarzy po załadowaniu strony
-    if (pin?.id) {
-      loadComments(); // Wczytaj komentarze, gdy `pin` jest dostępny
-    }
+    loadComments();
   }, [pin?.id]);
 
   const handleAddComment = async () => {
     const auth = getAuth();
     const currentUser = auth.currentUser;
-  
     if (currentUser && newComment.trim()) {
       try {
         await addDoc(collection(db, "comments"), {
-          username: currentUser.displayName || "Anonimowy użytkownik",
+          username: currentUser.displayName || "Anonymous User",
           text: newComment,
-          pinId: pin?.id, 
+          pinId: pin?.id,
+          userId: currentUser.uid,
         });
         setNewComment("");
         loadComments();
       } catch (error) {
         console.error("Error adding comment:", error);
-        alert("Wystąpił błąd podczas dodawania komentarza.");
+        alert("An error occurred while adding the comment.");
       }
     } else {
-      alert("Musisz być zalogowany, aby dodać komentarz");
+      alert("You must be logged in to add a comment.");
     }
   };
 
   if (!pin?.id) {
-    return <div>Loading...</div>; // Możesz dodać komunikat, jeśli `pin` nie jest dostępny
+    return <div>Loading...</div>;
   }
 
   return (
@@ -87,7 +98,7 @@ const Details: React.FC = () => {
         <div className="detailspage">
           <div className="details">
             <div className="imagedisplay">
-              <img src={pin.postImage} alt={pin.description || "Opis zdjęcia"} />
+              <img src={pin.postImage} alt={pin.description || "Image description"} />
             </div>
             <div className="contentdisplay">
               <div className="button_panel">
@@ -104,9 +115,17 @@ const Details: React.FC = () => {
               <div className="photo__comments">
                 {comments.length > 0 ? (
                   <ul>
-                    {comments.map((comment, index) => (
-                      <li key={index} className="photo__comment">
-                        <strong>{comment.username}:</strong> {comment.text}
+                    {comments.map((comment) => (
+                      <li key={comment.id} className="photo__comment">
+                        <strong>{comment.user}:</strong> {comment.text}
+                        {user && user.uid === comment.userId && (
+                          <button 
+                            className="delete-comment-btn"
+                            onClick={() => handleDeleteComment(comment.id, comment.userId)}
+                          >
+                            🗑 Delete
+                          </button>
+                        )}
                       </li>
                     ))}
                   </ul>
@@ -118,7 +137,7 @@ const Details: React.FC = () => {
                 <div className="commentbox">
                   <textarea
                     value={newComment}
-                    onChange={handleCommentChange}
+                    onChange={(e) => setNewComment(e.target.value)}
                     placeholder="Comment..."
                   />
                   <button className="button" onClick={handleAddComment}>
@@ -127,7 +146,7 @@ const Details: React.FC = () => {
                 </div>
               ) : (
                 <div>
-                  <p>Musisz być zalogowany, aby dodać komentarz</p>
+                  <p>You must be logged in to add a comment.</p>
                 </div>
               )}
             </div>

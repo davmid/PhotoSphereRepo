@@ -2,6 +2,8 @@ import React from "react";
 import "./PhotoDetails.css";
 
 interface Comment {
+  id: string;
+  userId: string;
   user: string;
   text: string;
 }
