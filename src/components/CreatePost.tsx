@@ -46,47 +46,53 @@ const CreatePost: React.FC = () => {
     const user = auth.currentUser;
 
     if (!user) {
-      alert("You must be logged in to upload a post.");
-      return;
+        alert("You must be logged in to upload a post.");
+        return;
     }
 
     if (!file) {
-      alert("Please upload an image.");
-      return;
+        alert("Please upload an image.");
+        return;
+    }
+
+    if (!formData.category) {
+        alert("Please select a category.");
+        return;
     }
 
     setUploading(true);
 
     try {
-      const storageRef = ref(storage, `posts/${user.uid}/${uuidv4()}-${file.name}`);
-      await uploadBytes(storageRef, file);
-      const imageUrl = await getDownloadURL(storageRef);
+        const storageRef = ref(storage, `posts/${user.uid}/${uuidv4()}-${file.name}`);
+        await uploadBytes(storageRef, file);
+        const imageUrl = await getDownloadURL(storageRef);
 
-      console.log("Uploaded Image URL:", imageUrl);
+        console.log("Uploaded Image URL:", imageUrl);
 
-      await addDoc(collection(db, "posts"), {
-        userId: user.uid,
-        username: user.displayName || "Anonymous",
-        postImage: imageUrl,
-        description: formData.description,
-        likes: 0,
-        timestamp: new Date(),
-      });
+        await addDoc(collection(db, "posts"), {
+            userId: user.uid,
+            username: user.displayName || "Anonymous",
+            postImage: imageUrl,
+            description: formData.description,
+            category: formData.category,
+            likes: 0,
+            likedBy: [], 
+            timestamp: serverTimestamp(),
+        });
 
-      console.log("Post Created");
+        console.log("Post Created");
 
-      setFormData({ description: "", category: "" });
-
-      setFile(null);
-
-      navigate("/main");
+        setFormData({ description: "", category: "" });
+        setFile(null);
+        navigate("/main");
 
     } catch (error) {
-      console.error("Error adding document:", error);
+        console.error("Error adding document:", error);
     } finally {
-      setUploading(false);
+        setUploading(false);
     }
 };
+
 
 
   return (
