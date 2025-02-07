@@ -47,21 +47,24 @@
     color: white;
 }
 
-.pin__avatar {
-    width: 30px;
-    height: 30px;
-    font-size: 14px;
-    margin-right: 8px;
+.pin__author {
+    display: flex;
+    align-items: center; /* Wyrównanie poziome (centrowanie) */
+    gap: 8px; /* Odstęp między awatarem a nazwą */
 }
 
 .pin__author-info {
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Wyrównanie w pionie */
 }
 
-.pin__author-name {
-    font-weight: bold;
+.pin__avatar {
+    width: 30px;
+    height: 30px;
     font-size: 14px;
+    margin-right: 8px;
+    /* Usuń inne marginesy, które mogą powodować przesunięcia */
 }
 
 .pin__timestamp {

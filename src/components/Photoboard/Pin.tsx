@@ -38,7 +38,7 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize}) => {
         onMouseLeave={() => setIsHovered(false)}
       >
         {/* Zdjęcie na pełny obszar */}
-        <img src={pin.postImage} alt={pin.description || "Pinned image"} className="pin__image" />
+        <img src={pin.postImage} alt={pin.description || "Pinned image"} className="pin__image" onClick={handleInfoClick} />
   
         {isHovered && (
           <div className="pin__likes">
@@ -62,9 +62,6 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize}) => {
   
         {isHovered && (
           <div className="pin__buttons">
-            <button  className="pin__button" onClick={handleInfoClick}>
-              <InfoIcon />
-            </button >
             <button  className="pin__button">
               <BookmarkBorderIcon />
             </button >
