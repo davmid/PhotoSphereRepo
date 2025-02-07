@@ -1,103 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Pin from './Pin';
 import '../styles/PinBoard.css';
-import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
-import { db } from '../../services/firebaseConfig';
 import { categories } from '../../AssetsBase/Categories';
+import useFetchPosts from '../../hooks/useFetchPosts';
 
 const PinBoard: React.FC = () => {
-    const [pins, setPins] = useState<Array<any>>([]);
-    const [loading, setLoading] = useState(true);
-    const [selectedCategory, setSelectedCategory] = useState<string>("All");
     const [searchParams] = useSearchParams();
+    const navigate = useNavigate();
     
+    const selectedCategory = searchParams.get("category") || "All";
     const selectedUser = searchParams.get("user") || "";
+    
+    const { pins, loading } = useFetchPosts(selectedCategory, selectedUser);
 
-    // useEffect(() => {
-    //     console.log(`Searching for posts by username: "${selectedUser}"`);
-    // }, [selectedUser]);
-
-    useEffect(() => {
-        const fetchPosts = async () => {
-            setLoading(true);
-            try {
-                let q;
-                
-                if (selectedCategory !== "All" && selectedUser) {
-                    q = query(
-                        collection(db, "posts"),
-                        where("category", "==", selectedCategory),
-                        where("username", "==", selectedUser),
-                        orderBy("timestamp", "desc")
-                    );
-                } else if (selectedCategory !== "All") {
-                    q = query(
-                        collection(db, "posts"),
-                        where("category", "==", selectedCategory),
-                        orderBy("timestamp", "desc")
-                    );
-                } else if (selectedUser) {
-                    q = query(
-                        collection(db, "posts"),
-                        where("username", "==", selectedUser),
-                        orderBy("timestamp", "desc")
-                    );
-                } else {
-                    q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
-                }
-
-                const querySnapshot = await getDocs(q);
-
-                if (querySnapshot.empty) {
-                    console.warn("No posts found for category",);
-                }
-
-                const postList = querySnapshot.docs.map((doc) => {
-                    const data = doc.data();
-                    console.log("📌 Fetched Post Data:", data);
-
-                    return {
-                        id: doc.id,
-                        postImage: data.postImage || "https://via.placeholder.com/300",
-                        username: data.username || "Unknown",
-                        description: data.description || "No description",
-                        category: data.category || "Uncategorized",
-                        timestamp: data.timestamp?.toDate
-                            ? data.timestamp.toDate().toLocaleString()
-                            : "Unknown date",
-                    };
-                });
-
-                setPins(postList);
-            } catch (error) {
-                console.error("Error fetching posts:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchPosts();
-    }, [selectedCategory, selectedUser]);
+    const handleCategoryClick = (category: string) => {
+        const queryParams = new URLSearchParams(searchParams);
+        if (category === "All") {
+            queryParams.delete("category");
+        } else {
+            queryParams.set("category", category);
+        }
+        navigate(`?${queryParams.toString()}`, { replace: true });
+    };
 
     return (
         <div>
-            <select 
-                id="category-select"
-                onChange={(e) => {
-                    setSelectedCategory(e.target.value.trim());
-                    setPins([]);
-                    setLoading(true);
-                }}
-                value={selectedCategory}
-            >
-                <option value="All">All Categories</option>
+            <div className="category-buttons">
+                <button 
+                    onClick={() => handleCategoryClick("All")}
+                    className={selectedCategory === "All" ? "active" : ""}
+                >
+                    All
+                </button>
                 {categories.map((cat, index) => (
-                    <option key={index} value={cat.name}>
+                    <button 
+                        key={index} 
+                        onClick={() => handleCategoryClick(cat.name)}
+                        className={selectedCategory === cat.name ? "active" : ""}
+                    >
                         {cat.name}
-                    </option>
+                    </button>
                 ))}
-            </select>
+            </div>
 
             <div className="pin_container">
                 {loading ? <p>Loading posts...</p> : 
