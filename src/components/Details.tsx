@@ -1,19 +1,20 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
-import { collection, getDocs, query, where, addDoc, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import "./styles/Details.css";
 import Navbar from "./navbar/Navbar";
 import Sidenav from "./navigation/Sidenav";
-import { Comment } from "../types/interfaces"; // Ensure this file contains the correct Comment interface
+import { Comment } from "../types/interfaces"; 
 
 const Details: React.FC = () => {
   const location = useLocation();
-  const pin = location.state?.pin; // Pobieramy pin z przekazanych danych
+  const [pin, setPin] = useState(location.state?.pin || null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [user, setUser] = useState<any>(null); // Dodajemy stan dla użytkownika
+  const [user, setUser] = useState<any>(null); 
+  const navigate = useNavigate();
   const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date();
 
   useEffect(() => {
@@ -30,7 +31,7 @@ const Details: React.FC = () => {
       const querySnapshot = await getDocs(
         query(collection(db, "comments"), where("pinId", "==", pin.id))
       );
-      
+
       const fetchedComments = querySnapshot.docs.map((doc) => ({
         id: doc.id,
         ...(doc.data() as Omit<Comment, "id">),
@@ -42,6 +43,34 @@ const Details: React.FC = () => {
       alert("An error occurred while loading comments.");
     }
   };
+
+  useEffect(() => {
+    loadComments();
+  }, [pin?.id]);
+
+  useEffect(() => {
+    const fetchPost = async () => {
+      if (!pin?.id) return;
+
+      try {
+        const postRef = doc(db, "posts", pin.id);
+        const postSnap = await getDoc(postRef);
+
+        if (postSnap.exists()) {
+          const postData = postSnap.data();
+          setPin((prevPin: typeof pin) => ({ ...prevPin, ...postData }));
+        } else {
+          console.log("Post not found in Firestore");
+        }
+      } catch (error) {
+        console.error("Error fetching post from Firestore:", error);
+      }
+    };
+
+    if (!pin?.userId) { 
+      fetchPost();
+    }
+  }, [pin]);
 
   const handleDeleteComment = async (commentId: string, commentUserId: string) => {
     if (!user || user.uid !== commentUserId) {
@@ -56,11 +85,6 @@ const Details: React.FC = () => {
       alert("An error occurred while deleting the comment.");
     }
   };
-
-  useEffect(() => {
-    // Ładowanie komentarzy po załadowaniu strony
-    loadComments();
-  }, [pin?.id]);
 
   const handleAddComment = async () => {
     const auth = getAuth();
@@ -84,6 +108,35 @@ const Details: React.FC = () => {
     }
   };
 
+  const handleDeletePost = async () => {
+    if (!user || user.uid !== pin?.userId) {
+      alert("You can only delete your own post!");
+      return;
+    }
+
+    try {
+      console.log("Deleting post:", pin);
+      const commentsQuery = query(collection(db, "comments"), where("pinId", "==", pin.id));
+      const querySnapshot = await getDocs(commentsQuery);
+      await Promise.all(querySnapshot.docs.map(commentDoc => deleteDoc(doc(db, "comments", commentDoc.id))));
+      await deleteDoc(doc(db, "posts", pin.id));
+
+      alert("Post deleted successfully!");
+      navigate("/");
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("An error occurred while deleting the post.");
+    }
+  };
+
+  useEffect(() => {
+    console.log("Logged-in User:", user);
+  }, [user]);
+
+  useEffect(() => {
+    console.log("Updated Pin Data:", pin);
+  }, [pin]);
+
   if (!pin?.id) {
     return <div>Loading...</div>;
   }
@@ -101,6 +154,11 @@ const Details: React.FC = () => {
               <img src={pin.postImage} alt={pin.description || "Image description"} />
             </div>
             <div className="contentdisplay">
+              {user && pin?.userId && user.uid === pin.userId && (
+                <button className="button delete-post-btn" onClick={handleDeletePost}>
+                  🗑 Delete Post
+                </button>
+              )}
               <div className="button_panel">
                 <button className="button">Like {pin.likes}</button>
                 <button className="button">Save</button>
@@ -117,7 +175,7 @@ const Details: React.FC = () => {
                   <ul>
                     {comments.map((comment) => (
                       <li key={comment.id} className="photo__comment">
-                        <strong>{comment.user}:</strong> {comment.text}
+                        <strong>{comment.username}:</strong> {comment.text}
                         {user && user.uid === comment.userId && (
                           <button 
                             className="delete-comment-btn"

@@ -223,3 +223,26 @@
   padding: 5px;
   margin-bottom: 5px;
 }
+
+.delete-post-btn {
+  background-color: #d9534f; 
+  color: white;
+  border: none;
+  padding: 20px 15px;
+  cursor: pointer;
+  margin-top: 10px;
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.delete-post-btn:hover {
+  background-color: #c9302c;
+  transform: translateY(-1px);
+}
+
+.delete-post-btn:active {
+  background-color: #ac2925;
+  transform: translateY(0);
+}
