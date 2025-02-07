@@ -71,7 +71,7 @@ const Register: React.FC = () => {
             {error && <p className="error-message">{error}</p>}
 
             <div className="form-group">
-              <label htmlFor="name">Name</label>
+              <label htmlFor="name" className="register-label">Name</label>
               <input
                 type="text"
                 id="name"
@@ -83,7 +83,7 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email" className="register-label">Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -95,7 +95,7 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password" className="register-label">Password</label>
               <input
                 type="password"
                 id="password"
@@ -107,7 +107,7 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="repeatPassword">Repeat Password</label>
+              <label htmlFor="repeatPassword" className="register-label">Repeat Password</label>
               <input
                 type="password"
                 id="repeatPassword"
