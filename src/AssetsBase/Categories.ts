@@ -8,5 +8,5 @@ export const categories: Category[] = [
     { name: "Animals", color: "#fb5607", path: "/animals", icon: PetsIcon },
     { name: "Nature", color: "#06d6a0", path: "/nature", icon: ForestIcon },
     { name: "Cars", color: "#9d4edd", path: "/cars", icon: DirectionsCarIcon },
-    { name: "Wallapers", color: "#3a86ff", path: "/wallpapers", icon: ExploreIcon },
+    { name: "Wallpapers", color: "#3a86ff", path: "/wallpapers", icon: ExploreIcon },
   ];
