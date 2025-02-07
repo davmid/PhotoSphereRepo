@@ -5,8 +5,8 @@ import ExploreIcon from "@mui/icons-material/Explore";
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 
 export const categories: Category[] = [
-    { name: "Animals", color: "#FFB6C1", path: "/main", icon: PetsIcon },
-    { name: "Nature", color: "#98FB98", path: "/search", icon: ForestIcon },
-    { name: "Car", color: "#ADD8E6", path: "/explore", icon: DirectionsCarIcon },
-    { name: "Exploring", color: "#FFDA89", path: "/create", icon: ExploreIcon },
+    { name: "Animals", color: "#fb5607", path: "/animals", icon: PetsIcon },
+    { name: "Nature", color: "#06d6a0", path: "/nature", icon: ForestIcon },
+    { name: "Cars", color: "#9d4edd", path: "/cars", icon: DirectionsCarIcon },
+    { name: "Wallapers", color: "#3a86ff", path: "/wallpapers", icon: ExploreIcon },
   ];
