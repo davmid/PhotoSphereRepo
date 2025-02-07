@@ -95,20 +95,21 @@ const CreatePost: React.FC = () => {
 
 
 
-  return (
-    <div className="create-post-page">
-      <Navbar />
+return (
+  <div className="create-post-page">
+    <Navbar />
 
-      <div className="main-content">
-        {/* Sidebar */}
-        <div className="navWraper">
-          <Sidenav />
-        </div>
+    <div className="main-content">
+      {/* Sidebar */}
+      <div className="navWraper">
+        <Sidenav />
+      </div>
 
-        {/* Main Content */}
-        <div className="container__create">
-          <div className="create-post">
-            <h2>Create a New Post</h2>
+      {/* Main Content */}
+      <div className="container__create">
+        <div className="create-post">
+          <h2>Create a New Post</h2>
+          <div className="create-post__content">
             <div className="image-preview">
               {file ? (
                 <img src={URL.createObjectURL(file)} alt="Preview" className="image-preview__img" />
@@ -116,46 +117,60 @@ const CreatePost: React.FC = () => {
                 <div className="image-placeholder">Image Preview</div>
               )}
             </div>
-            {user ? (
-              <form onSubmit={handleSubmit} className="create-post__form">
-                <div className="form-group">
-                  <label htmlFor="fileUpload">Upload Image:</label>
-                  <input type="file" id="fileUpload" onChange={handleFileChange} accept="image/*" required />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="description">Description:</label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={formData.description}
-                    onChange={handleChange}
-                    placeholder="Write something about your post"
-                    required
-                  />
-                </div>
-                <div className="form-group category-dropdown">
-                  <label htmlFor="category">Category:</label>
-                  <select id="category" name="category" value={formData.category} onChange={handleChange}>
-                    <option value="">Select Category (Optional)</option>
-                    {categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <button type="submit" className="create-post__button" disabled={uploading}>
-                  {uploading ? "Uploading..." : "Create Post"}
-                </button>
-              </form>
-            ) : (
-              <p>Please log in to create a post.</p>
-            )}
+            <div className="form-container">
+              {user ? (
+                <form onSubmit={handleSubmit} className="create-post__form">
+                  <div className="form-group">
+                    <h5 >Upload Image:</h5>
+                    <input
+                      type="file"
+                      id="fileUpload"
+                      onChange={handleFileChange}
+                      accept="image/*"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <h5>Description:</h5>
+                    <textarea
+                      id="description"
+                      name="description"
+                      value={formData.description}
+                      onChange={handleChange}
+                      placeholder="Write something about your post"
+                      required
+                    />
+                  </div>
+                  <div className="form-group category-dropdown">
+                    <h5 >Category:</h5>
+                    <select
+                      id="category"
+                      name="category"
+                      value={formData.category}
+                      onChange={handleChange}
+                    >
+                      <option value="">Select Category (Optional)</option>
+                      {categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <button type="submit" className="create-post__button" disabled={uploading}>
+                    {uploading ? "Uploading..." : "Create Post"}
+                  </button>
+                </form>
+              ) : (
+                <p>Please log in to create a post.</p>
+              )}
+            </div>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 };
 
 export default CreatePost;
