@@ -54,7 +54,6 @@ const Account: React.FC = () => {
         }
 
         const posts = querySnapshot.docs.map((doc) => {
-            console.log("Fetched Post Data:", doc.data()); // Log each document's data
             const data = doc.data();
             return {
                 id: doc.id,
