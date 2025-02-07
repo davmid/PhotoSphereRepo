@@ -1,0 +1,212 @@
+/* Ustawienie kontenera dla całej strony */
+.container {
+    display: flex; /* Opcjonalnie, dodaje odstęp pomiędzy divami */
+}
+  
+
+.detailspage {
+    display: flex;
+    justify-content: center; /* Elementy ustawione obok siebie */
+    align-items: center; /* Wyrównanie od góry */
+    width: 100%;
+  }
+  
+  .details {
+    display: flex;
+    flex-direction: row; /* Ustawienie elementów w kolumnie */
+    justify-content: right; /* Zawartość od góry */
+    align-items: center; /* Wyśrodkowanie w poziomie */
+    width: 100%;
+    max-width: 700px; /* Maksymalna szerokość dla detali */
+    background-color: #fff;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 10px;
+    color: #000000;
+  }
+  
+  .imagedisplay{
+    display: flex;
+    max-width: 50%;
+    min-width: 300px;
+  }
+  /* Style dla wyświetlania obrazu */
+  .imagedisplay img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Sekcja przycisków pod obrazkiem */
+  .contentdisplay {
+    min-width: 300px;
+    padding: 20px;
+  }
+  
+  .button_panel {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .like_button,
+  .save_button {
+    padding: 10px;
+    background-color: #f1f1f1;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .like_button:hover,
+  .save_button:hover {
+    background-color: #ececec;
+  }
+  
+  .image_description h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+  
+  .save_btn {
+    margin: 10px;
+    font-size: 14px;
+    color: #888;
+  }
+  
+  /* Kontener dla komentarzy */
+  .photo__comments {
+    height: 150px;
+    text-align: left;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+    color: #000000;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .photo__comments ul {
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+    text-align: left;
+
+  }
+  
+  .photo__comment {
+    font-size: 11px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+
+  }
+
+  .btn-delete {
+    background: none;      
+    border: none;         
+    padding: 0;           
+    color: inherit;        
+    font: inherit;         
+    cursor: pointer;       
+    display: inline; 
+    font-size: 11px;
+  }
+
+  .delete-icon {
+    font-size: 11px;       
+    color: #000;           
+    transition: transform 0.2s ease
+  }
+  
+  .photo__comment strong {
+    color: #000000;
+  }
+  
+  .photo__no-comments {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+  }
+  
+  .commentbox {
+    margin-top: 20px;
+    width: 100%;
+  }
+  
+  .commentbox textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    resize: vertical;
+    font-size: 14px;
+  }
+  
+  .commentbox_button {
+    padding: 10px;
+    background-color: #0077ff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .commentbox_button:hover {
+    background-color: #005bb5;
+  }
+  
+
+  .button {
+    align-items: center;
+    background-clip: padding-box;
+    background-color: #fa6400;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+    box-shadow: rgba(0, 0, 0, 0.02) 0 1px 3px 0;
+    box-sizing: border-box;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: system-ui,-apple-system,system-ui,"Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    justify-content: center;
+    line-height: 1.25;
+    margin: 0;
+    min-height: 1rem;
+    max-height: 5px;
+    padding: calc(.875rem - 1px) calc(1.5rem - 1px);
+    position: relative;
+    text-decoration: none;
+    transition: all 250ms;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: baseline;
+    width: auto;
+  }
+  
+  .button:hover,
+  .button:focus {
+    background-color: #fb8332;
+    box-shadow: rgba(0, 0, 0, 0.1) 0 4px 12px;
+  }
+  
+  .button:hover {
+    transform: translateY(-1px);
+  }
+  
+  .button:active {
+    background-color: #c85000;
+    box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
+    transform: translateY(0);
+  }

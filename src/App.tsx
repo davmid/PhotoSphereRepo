@@ -7,6 +7,7 @@ import Homepage from "./components/Homepage";
 import CreatePost from "./components/CreatePost";
 import Account from "./components/Account";
 import Details from "./components/Details";
+import EditPost from "./components/EditPost"
 import PrivateRoute from "./services/PrivateRoute"; // Importujemy PrivateRoute
 
 const App: React.FC = () => {
@@ -23,6 +24,7 @@ const App: React.FC = () => {
           {/* Trasy prywatne */}
           <Route path="/create" element={<PrivateRoute element={<CreatePost />} path="/create" />} />
           <Route path="/account" element={<PrivateRoute element={<Account />} path="/account" />} />
+          <Route path="/edit/:postId" element={<PrivateRoute element={<EditPost />} path="/edit/:id" />} />
         </Routes>
       </Router>
     </div>
