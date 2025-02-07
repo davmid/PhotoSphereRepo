@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 import { useNavigate } from "react-router-dom";
 
 
-const categories = ["Animals", "Nature", "Car", "Wallpapers", "Other"];
+const categories = ["Animals", "Nature", "Cars", "Wallpapers", "Other"];
 
 const CreatePost: React.FC = () => {
   const [formData, setFormData] = useState({
