@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import "./styles/Account.css";
 import Sidenav from "./navigation/Sidenav";
 import Navbar from "./navbar/Navbar";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { Button } from "@mui/material";
+import { getAuth, onAuthStateChanged, updatePassword, updateProfile } from "firebase/auth";
+import { Button, TextField } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { exampleUsers } from "../AssetsBase/Users";
 import { useNavigate } from "react-router-dom";
-import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { 
+  collection, query, where, getDocs, orderBy, 
+  doc, updateDoc, getDoc, setDoc
+} from "firebase/firestore";
+
 import { db } from "../services/firebaseConfig";
 
 const Account: React.FC = () => {
@@ -15,12 +19,18 @@ const Account: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"created" | "saved">("created");
   const [userPosts, setUserPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [editing, setEditing] = useState(false);
+  const [newUsername, setNewUsername] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (loggedInUser) => {
       setUser(loggedInUser);
+      if (loggedInUser?.displayName) {
+        setNewUsername(loggedInUser.displayName);
+      }
     });
 
     return () => unsubscribe();
@@ -82,6 +92,65 @@ const Account: React.FC = () => {
     navigate(`/details/${pin.id}`, { state: { pin } });
   };
 
+  const toggleEditProfile = () => {
+    setEditing(!editing);
+  };
+
+  const handleUpdateProfile = async () => {
+    if (!user) return;
+    try {
+      const auth = getAuth();
+      const currentUser = auth.currentUser;
+  
+      if (!currentUser) {
+        alert("No authenticated user found.");
+        return;
+      }
+  
+      // ✅ Update Firebase Authentication Profile
+      await updateProfile(currentUser, { displayName: newUsername });
+  
+      // ✅ Update Firestore user document (Check if exists first)
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        await updateDoc(userRef, { username: newUsername });
+      } else {
+        await setDoc(userRef, {
+          username: newUsername,
+          email: user.email || "",
+          avatarUrl: "", // Default empty
+          createdAt: new Date(),
+        });
+      }
+  
+      setUser({ ...user, displayName: newUsername });
+  
+      alert("Profile updated successfully!");
+      setEditing(false);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile.");
+    }
+  };
+  
+  const handleUpdatePassword = async () => {
+    if (!user || newPassword.length < 6) {
+      alert("Password must be at least 6 characters long.");
+      return;
+    }
+  
+    try {
+      const auth = getAuth();
+      await updatePassword(auth.currentUser!, newPassword);
+      alert("Password updated successfully!");
+      setNewPassword("");
+    } catch (error) {
+      console.error("Error updating password:", error);
+      alert("Failed to update password. Please re-authenticate.");
+    }
+  };
   
 
   const currentUser = user || exampleUsers[0];
@@ -116,13 +185,46 @@ const Account: React.FC = () => {
                 )}
               </div>
               <div className="profile-info">
-                <h1>{currentUser.displayName || "Anonymous"}</h1>
-                <p>@{currentUser.email || "No email"}</p>
-                <div className="profile-buttons">
-                  <button type="submit" className="button_profil">
-                    Edit profile
-                  </button>
-                </div>
+                {editing ? (
+                  <>
+                    <TextField
+                      label="New Username"
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <TextField
+                      label="New Password"
+                      type="password"
+                      value={newPassword}
+                      onChange={(e) => setNewPassword(e.target.value)}
+                      fullWidth
+                      margin="normal"
+                    />
+                    <div className="profile-buttons">
+                      <Button variant="contained" onClick={handleUpdateProfile}>
+                        Change username
+                      </Button>
+                      <Button variant="outlined" onClick={handleUpdatePassword}>
+                        Change Password
+                      </Button>
+                      <Button variant="text" onClick={toggleEditProfile}>
+                        Cancel
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <h1>{currentUser.displayName || "Anonymous"}</h1>
+                    <p>@{currentUser.email || "No email"}</p>
+                    <div className="profile-buttons">
+                      <button type="button" className="button_profil" onClick={toggleEditProfile}>
+                        Edit profile
+                      </button>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
