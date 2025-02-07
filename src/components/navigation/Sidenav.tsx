@@ -85,7 +85,6 @@ const Sidenav: React.FC = () => {
         <div></div>
       )}
 
-      {/* Przycisk edycji, tylko jeśli użytkownik jest właścicielem obrazu */}
       {user && isOwner ? (
         <button className="floating-button-edit" onClick={() => handleNavigation(`/edit/${id}`)}>
           <EditIcon />

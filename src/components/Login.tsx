@@ -53,7 +53,7 @@ const Login: React.FC = () => {
             {error && <p className="error-message">{error}</p>}
 
             <div className="form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="email" className="login-label">Email Address</label>
               <input
                 type="email"
                 id="email"
@@ -65,7 +65,7 @@ const Login: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password" className="login-label">Password</label>
               <input
                 type="password"
                 id="password"
