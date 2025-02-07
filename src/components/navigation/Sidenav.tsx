@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import "./Sidenav.css";
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
@@ -13,6 +13,7 @@ const Sidenav: React.FC = () => {
   const { id } = useParams<{ id: string }>(); // Pobieramy `id` obrazu z URL
   const [user, setUser] = useState<any>(null);
   const [isOwner, setIsOwner] = useState(false); // Stan do przechowywania, czy użytkownik jest właścicielem
+  const [searchParams] = useSearchParams();
 
   const handleNavigation = (path: string) => {
     navigate(path);
@@ -47,6 +48,17 @@ const Sidenav: React.FC = () => {
     }
   }, [id, user]); // Uruchamiamy, gdy id lub user się zmienia
 
+
+  const handleCategoryClick = (category: string) => {
+    const queryParams = new URLSearchParams(searchParams);
+    if (category === "All") {
+        queryParams.delete("category");
+    } else {
+        queryParams.set("category", category);
+    }
+    navigate(`?${queryParams.toString()}`, { replace: true });
+  };
+
   return (
     <div className="sidenav">
       <h3 className="sidenav_category">Categories</h3>
@@ -55,7 +67,7 @@ const Sidenav: React.FC = () => {
           <button
             key={index}
             className="sidenav__button"
-            onClick={() => handleNavigation(category.path)}
+            onClick={() => handleCategoryClick(category.name)}
             style={{ backgroundColor: category.color }}
           >
             <category.icon />
