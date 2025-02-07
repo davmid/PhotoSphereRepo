@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
 import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
-import { getAuth } from "firebase/auth"; // Import getAuth
+import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import getAuth
 import { useLocation } from "react-router-dom";
 import "./styles/Details.css";
 import Navbar from "./navbar/Navbar";
@@ -13,55 +13,69 @@ const Details: React.FC = () => {
   const [comments, setComments] = useState<{ username: string; text: string }[]>([]);
   const [newComment, setNewComment] = useState("");
   const [user, setUser] = useState<any>(null); // Dodajemy stan dla użytkownika
+  const timestampDate = pin.timestamp ? new Date(pin.timestamp) : new Date(); 
 
   useEffect(() => {
-    // Sprawdzamy, który użytkownik jest zalogowany
     const auth = getAuth();
-    const currentUser = auth.currentUser;
-    setUser(currentUser); // Ustawiamy zalogowanego użytkownika
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
 
-    if (pin) {
-      loadComments(); // Wczytanie komentarzy tylko jeśli pin jest dostępny
-    }
+    return () => unsubscribe();
   }, [pin]);
 
   const loadComments = async () => {
-    const querySnapshot = await getDocs(
-      query(collection(db, "comments"), where("pinId", "==", pin?.id))
-    );
-
-    const fetchedComments: { username: string; text: string }[] = [];
-    querySnapshot.forEach((doc) => {
-      fetchedComments.push(doc.data() as { username: string; text: string });
-    });
-    setComments(fetchedComments); // Ustawienie komentarzy w stanie
+    try {
+      const querySnapshot = await getDocs(
+        query(collection(db, "comments"), where("pinId", "==", pin?.id))
+      );
+      const fetchedComments: { username: string; text: string }[] = [];
+      querySnapshot.forEach((doc) => {
+        fetchedComments.push(doc.data() as { username: string; text: string });
+      });
+      setComments(fetchedComments);
+    } catch (error) {
+      console.error("Error loading comments:", error);
+      alert("Wystąpił błąd podczas ładowania komentarzy.");
+    }
   };
 
   const handleCommentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setNewComment(e.target.value);
   };
 
+  useEffect(() => {
+    // Ładowanie komentarzy po załadowaniu strony
+    if (pin?.id) {
+      loadComments(); // Wczytaj komentarze, gdy `pin` jest dostępny
+    }
+  }, [pin?.id]);
+
   const handleAddComment = async () => {
     const auth = getAuth();
     const currentUser = auth.currentUser;
-
+  
     if (currentUser && newComment.trim()) {
-      // Dodanie komentarza z przypisanym pinId
-      await addDoc(collection(db, "comments"), {
-        username: currentUser.displayName || "Anonimowy użytkownik",
-        text: newComment,
-        pinId: pin?.id, // Przypisanie id zdjęcia
-      });
-
-      setNewComment(""); // Resetowanie tekstu po dodaniu komentarza
-      loadComments(); // Ponowne załadowanie komentarzy po dodaniu
+      try {
+        await addDoc(collection(db, "comments"), {
+          username: currentUser.displayName || "Anonimowy użytkownik",
+          text: newComment,
+          pinId: pin?.id, 
+        });
+        setNewComment("");
+        loadComments();
+      } catch (error) {
+        console.error("Error adding comment:", error);
+        alert("Wystąpił błąd podczas dodawania komentarza.");
+      }
     } else {
       alert("Musisz być zalogowany, aby dodać komentarz");
     }
   };
 
-  if (!pin) {
-    return <div>Loading...</div>;
+  if (!pin?.id) {
+    alert("Brak danych pin, nie można dodać komentarza.");
+    return null;
   }
 
   return (
@@ -82,12 +96,12 @@ const Details: React.FC = () => {
                 <button className="button">Save</button>
               </div>
               <div className="image_description">
-                <h3>{pin.description}</h3>
+                <h4>{pin.description}</h4>
               </div>
               <div className="username_date">
-                <h4>{pin.username} - {new Date(pin.timestamp).toLocaleDateString()}</h4>
+                <h4>{pin.username} - {timestampDate.toLocaleDateString()}</h4>
               </div>
-              <h3>Comments:</h3>
+              <h4>Comments:</h4>
               <div className="photo__comments">
                 {comments.length > 0 ? (
                   <ul>
