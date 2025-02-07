@@ -1,20 +1,21 @@
 import React, { useState, useEffect } from "react";
 import "./styles/Account.css";
 import Sidenav from "./navigation/Sidenav";
-import Navbar from './navbar/Navbar';
+import Navbar from "./navbar/Navbar";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Button } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { exampleUsers } from "../AssetsBase/Users";
 import { useNavigate } from "react-router-dom";
+import { collection, query, where, getDocs, orderBy } from "firebase/firestore";
+import { db } from "../services/firebaseConfig";
 
 const Account: React.FC = () => {
   const [user, setUser] = useState<any>(null);
+  const [activeTab, setActiveTab] = useState<"created" | "saved">("created");
+  const [userPosts, setUserPosts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  
-    const handleNavigation = (path: string) => {
-      navigate(path);
-    };
 
   useEffect(() => {
     const auth = getAuth();
@@ -24,11 +25,54 @@ const Account: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
- 
-  const currentUser = user || exampleUsers[0]; 
+  useEffect(() => {
+    if (user && activeTab === "created") {
+      fetchUserPosts();
+    }
+  }, [user, activeTab]);
+
+  const fetchUserPosts = async () => {
+    if (!user) return;
+    setLoading(true);
+
+    try {
+      const postsRef = collection(db, "posts");
+      const q = query(
+        postsRef,
+        where("uploadedBy", "==", user.uid), 
+        orderBy("timestamp", "desc")
+      );
+      const querySnapshot = await getDocs(q);
+
+      const posts = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          postImage: data.postImage || "https://via.placeholder.com/300",
+          username: data.username || "Unknown",
+          description: data.description || "",
+          timestamp: data.timestamp?.toDate().toLocaleString() || "Unknown date",
+        };
+      });
+
+      console.log("Fetched User Posts:", posts);
+
+      setUserPosts(posts);
+    } catch (error) {
+      console.error("Error fetching user posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
+  const currentUser = user || exampleUsers[0];
 
   if (!currentUser) {
-    return <div>Loading...</div>; 
+    return <div>Loading...</div>;
   }
 
   return (
@@ -58,18 +102,58 @@ const Account: React.FC = () => {
                 <h1>{currentUser.displayName || "Anonymous"}</h1>
                 <p>@{currentUser.email || "No email"}</p>
                 <div className="profile-buttons">
-                <button type="submit" className="button_profil" >Edit profile</button>
+                  <button type="submit" className="button_profil">
+                    Edit profile
+                  </button>
                 </div>
               </div>
             </div>
+
+            {/* Tabs */}
             <div className="profile-tabs">
-              <Button variant="text">Created</Button>
-              <Button variant="text">Saved</Button>
+              <Button
+                variant={activeTab === "created" ? "contained" : "text"}
+                onClick={() => setActiveTab("created")}
+              >
+                Created
+              </Button>
+              <Button
+                variant={activeTab === "saved" ? "contained" : "text"}
+                onClick={() => setActiveTab("saved")}
+              >
+                Saved
+              </Button>
             </div>
-            <div className="profile-content">
-              <p>You don't have any saved Pins yet</p>
-              <Button variant="outlined" onClick={() => handleNavigation("/main")}  >Find Pins</Button>
-            </div>
+
+            {activeTab === "created" && (
+              <div className="profile-content">
+                {loading ? (
+                  <p>Loading posts...</p>
+                ) : userPosts.length > 0 ? (
+                  <div className="image-grid">
+                    {userPosts.map((post) => (
+                      <div key={post.id} className="post-card">
+                        <p className="post-username">{post.username}</p>
+                        <img src={post.postImage} alt="User Upload" className="uploaded-image" />
+                        <p className="post-description">{post.description}</p>
+                        <p className="post-date">{post.timestamp}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>You haven't uploaded any posts yet.</p>
+                )}
+              </div>
+            )}
+
+            {activeTab === "saved" && (
+              <div className="profile-content">
+                <p>You don't have any saved Pins yet</p>
+                <Button variant="outlined" onClick={() => handleNavigation("/main")}>
+                  Find Pins
+                </Button>
+              </div>
+            )}
           </div>
         </div>
       </div>
