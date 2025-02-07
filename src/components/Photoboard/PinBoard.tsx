@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import Pin from './Pin';
 import '../styles/PinBoard.css';
-import { collection, getDocs, query, orderBy, where } from 'firebase/firestore';
+import { collection, getDocs, query, where, orderBy } from 'firebase/firestore';
 import { db } from '../../services/firebaseConfig';
 import { categories } from '../../AssetsBase/Categories';
 
@@ -9,31 +10,53 @@ const PinBoard: React.FC = () => {
     const [pins, setPins] = useState<Array<any>>([]);
     const [loading, setLoading] = useState(true);
     const [selectedCategory, setSelectedCategory] = useState<string>("All");
+    const [searchParams] = useSearchParams();
+    
+    const selectedUser = searchParams.get("user") || "";
+
+    // useEffect(() => {
+    //     console.log(`Searching for posts by username: "${selectedUser}"`);
+    // }, [selectedUser]);
 
     useEffect(() => {
         const fetchPosts = async () => {
             setLoading(true);
             try {
                 let q;
-                if (selectedCategory !== "All") {
+                
+                if (selectedCategory !== "All" && selectedUser) {
+                    q = query(
+                        collection(db, "posts"),
+                        where("category", "==", selectedCategory),
+                        where("username", "==", selectedUser),
+                        orderBy("timestamp", "desc")
+                    );
+                } else if (selectedCategory !== "All") {
                     q = query(
                         collection(db, "posts"),
                         where("category", "==", selectedCategory),
                         orderBy("timestamp", "desc")
                     );
+                } else if (selectedUser) {
+                    q = query(
+                        collection(db, "posts"),
+                        where("username", "==", selectedUser),
+                        orderBy("timestamp", "desc")
+                    );
                 } else {
                     q = query(collection(db, "posts"), orderBy("timestamp", "desc"));
                 }
-        
+
                 const querySnapshot = await getDocs(q);
-        
+
                 if (querySnapshot.empty) {
-                    console.warn(`⚠️ No posts found for category: "${selectedCategory}"`);
+                    console.warn("No posts found for category",);
                 }
-        
+
                 const postList = querySnapshot.docs.map((doc) => {
                     const data = doc.data();
-        
+                    console.log("📌 Fetched Post Data:", data);
+
                     return {
                         id: doc.id,
                         postImage: data.postImage || "https://via.placeholder.com/300",
@@ -45,25 +68,24 @@ const PinBoard: React.FC = () => {
                             : "Unknown date",
                     };
                 });
-        
+
                 setPins(postList);
             } catch (error) {
-                console.error("❌ Error fetching posts:", error);
+                console.error("Error fetching posts:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         fetchPosts();
-    }, [selectedCategory]);
+    }, [selectedCategory, selectedUser]);
 
     return (
         <div>
             <select 
                 id="category-select"
                 onChange={(e) => {
-                    console.log("Selected Category:", `"${e.target.value}"`);
-                    setSelectedCategory(e.target.value.trim()); 
+                    setSelectedCategory(e.target.value.trim());
                     setPins([]);
                     setLoading(true);
                 }}
@@ -76,17 +98,17 @@ const PinBoard: React.FC = () => {
                     </option>
                 ))}
             </select>
+
             <div className="pin_container">
                 {loading ? <p>Loading posts...</p> : 
                     pins.length > 0 ? (
                         pins.map((pin) => {
                             const sizes = ["small", "medium", "large"];
                             const randomSize = sizes[Math.floor(Math.random() * sizes.length)];
-        
                             return <Pin key={pin.id} pin={pin} randomSize={randomSize} />;
                         })
                     ) : (
-                        <p>No posts available for this category.</p>
+                        <p>No posts found {selectedUser ? `for "${selectedUser}"` : ""}.</p>
                     )}
             </div>
         </div>

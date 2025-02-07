@@ -120,7 +120,7 @@ const Details: React.FC = () => {
                   <textarea
                     value={newComment}
                     onChange={handleCommentChange}
-                    placeholder="Dodaj komentarz..."
+                    placeholder="Comment..."
                   />
                   <button className="button" onClick={handleAddComment}>
                     Send
