@@ -134,3 +134,32 @@
   box-shadow: rgba(0, 0, 0, .06) 0 2px 4px;
   transform: translateY(0);
 }
+
+.image-grid {
+  justify-content: center;
+  margin: 0;
+  margin-left: 90px;
+  padding: 0;
+  width: 90vw;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 200px);  /* Automatyczne wypełnianie z 250px na kafelek */
+  grid-auto-rows: 250px;  /* Wysokość wierszy dopasowana do wysokości obrazków */
+  gap: 10px;  /* Odstępy między kafelkami */
+}
+
+.post-card {
+  position: relative;
+  overflow: hidden;  /* Ukrywa część obrazu, jeśli jest za dużą część w wyświetlonym obszarze */
+  border-radius: 8px;
+}
+
+.uploaded-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* Wypełnia całą przestrzeń, zachowując proporcje */
+}
+
+
