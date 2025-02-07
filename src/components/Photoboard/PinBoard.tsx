@@ -26,24 +26,6 @@ const PinBoard: React.FC = () => {
 
     return (
         <div>
-            <div className="category-buttons">
-                <button 
-                    onClick={() => handleCategoryClick("All")}
-                    className={selectedCategory === "All" ? "active" : ""}
-                >
-                    All
-                </button>
-                {categories.map((cat, index) => (
-                    <button 
-                        key={index} 
-                        onClick={() => handleCategoryClick(cat.name)}
-                        className={selectedCategory === cat.name ? "active" : ""}
-                    >
-                        {cat.name}
-                    </button>
-                ))}
-            </div>
-
             <div className="pin_container">
                 {loading ? <p>Loading posts...</p> : 
                     pins.length > 0 ? (
