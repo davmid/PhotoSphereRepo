@@ -13,7 +13,7 @@ const Details: React.FC = () => {
   const [pin, setPin] = useState(location.state?.pin || null);
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [user, setUser] = useState<any>(null); 
+  const [user, setUser] = useState<any>(null); // User authentication state
   const navigate = useNavigate();
   const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date();
 
@@ -58,6 +58,7 @@ const Details: React.FC = () => {
 
         if (postSnap.exists()) {
           const postData = postSnap.data();
+          console.log("Fetched Post from Firestore:", postData);
           setPin((prevPin: typeof pin) => ({ ...prevPin, ...postData }));
         } else {
           console.log("Post not found in Firestore");
@@ -119,16 +120,19 @@ const Details: React.FC = () => {
       const commentsQuery = query(collection(db, "comments"), where("pinId", "==", pin.id));
       const querySnapshot = await getDocs(commentsQuery);
       await Promise.all(querySnapshot.docs.map(commentDoc => deleteDoc(doc(db, "comments", commentDoc.id))));
+
+      // Delete the post itself
       await deleteDoc(doc(db, "posts", pin.id));
 
       alert("Post deleted successfully!");
-      navigate("/");
+      navigate("/main"); 
     } catch (error) {
       console.error("Error deleting post:", error);
       alert("An error occurred while deleting the post.");
     }
   };
 
+  // Debugging Logs
   useEffect(() => {
     console.log("Logged-in User:", user);
   }, [user]);
@@ -140,6 +144,7 @@ const Details: React.FC = () => {
   if (!pin?.id) {
     return <div>Loading...</div>;
   }
+  console.log("Final pin.userId:", pin.userId);
 
   return (
     <div className="container_navBar">
@@ -159,16 +164,19 @@ const Details: React.FC = () => {
                   🗑 Delete Post
                 </button>
               )}
+
               <div className="button_panel">
                 <button className="button">Like {pin.likes}</button>
                 <button className="button">Save</button>
               </div>
+
               <div className="image_description">
                 <h4>{pin.description}</h4>
               </div>
               <div className="username_date">
                 <h4>{pin.username} - {timestampDate.toLocaleDateString()}</h4>
               </div>
+
               <h4>Comments:</h4>
               <div className="photo__comments">
                 {comments.length > 0 ? (
