@@ -26,7 +26,6 @@ const Account: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  // Fetch user posts when the user is available and tab is "created"
   useEffect(() => {
     if (user && activeTab === "created") {
       fetchUserPosts();
@@ -38,47 +37,52 @@ const Account: React.FC = () => {
     setLoading(true);
 
     try {
-        console.log("Fetching posts for UID:", user.uid);
+      console.log("Fetching posts for UID:", user.uid);
 
-        const postsRef = collection(db, "posts"); // Reference to posts collection
-        const q = query(
-            postsRef,
-            where("userId", "==", user.uid),  // Ensure field name matches Firestore
-            orderBy("timestamp", "desc")
-        );
+      const postsRef = collection(db, "posts");
+      const q = query(
+        postsRef,
+        where("userId", "==", user.uid),
+        orderBy("timestamp", "desc")
+      );
 
-        const querySnapshot = await getDocs(q);
+      const querySnapshot = await getDocs(q);
 
-        if (querySnapshot.empty) {
-            console.log("No posts found for this user.");
-        }
+      if (querySnapshot.empty) {
+        console.log("No posts found for this user.");
+      }
 
-        const posts = querySnapshot.docs.map((doc) => {
-            const data = doc.data();
-            return {
-                id: doc.id,
-                postImage: data.postImage || "https://via.placeholder.com/300",
-                username: data.username || "Unknown",
-                description: data.description || "",
-                timestamp: data.timestamp?.toDate
-                    ? data.timestamp.toDate().toLocaleString()
-                    : "Unknown date",
-            };
-        });
+      const posts = querySnapshot.docs.map((doc) => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          postImage: data.postImage || "https://via.placeholder.com/300",
+          username: data.username || "Unknown",
+          description: data.description || "",
+          timestamp: data.timestamp?.toDate
+            ? data.timestamp.toDate().toLocaleString()
+            : "Unknown date",
+        };
+      });
 
-        console.log("Final User Posts Array:", posts);
-        setUserPosts(posts);
+      console.log("Final User Posts Array:", posts);
+      setUserPosts(posts);
     } catch (error) {
-        console.error("Error fetching user posts:", error);
+      console.error("Error fetching user posts:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
-
+  };
 
   const handleNavigation = (path: string) => {
     navigate(path);
   };
+
+  const handleInfoClick = (pin: any) => {
+    navigate(`/details/${pin.id}`, { state: { pin } });
+  };
+
+  
 
   const currentUser = user || exampleUsers[0];
 
@@ -145,15 +149,16 @@ const Account: React.FC = () => {
                 ) : userPosts.length > 0 ? (
                   <div className="image-grid">
                     {userPosts.map((post) => (
-                      <div key={post.id} className="post-card">
-                        <p className="post-username">{post.username}</p>
+                      <div
+                        key={post.id}
+                        className="post-card"
+                        onClick={() => handleInfoClick(post)} // Przechodzi do szczegółów po kliknięciu
+                      >
                         <img
                           src={post.postImage}
                           alt="User Upload"
                           className="uploaded-image"
                         />
-                        <p className="post-description">{post.description}</p>
-                        <p className="post-date">{post.timestamp}</p>
                       </div>
                     ))}
                   </div>

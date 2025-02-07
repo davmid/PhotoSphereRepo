@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
 import { collection, getDocs, query, where, addDoc } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth"; // Import getAuth
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useLocation } from "react-router-dom";
 import "./styles/Details.css";
 import Navbar from "./navbar/Navbar";
@@ -9,11 +9,11 @@ import Sidenav from "./navigation/Sidenav";
 
 const Details: React.FC = () => {
   const location = useLocation();
-  const pin = location.state?.pin; // Pobieramy pin z przekazanych danych
+  const pin = location.state?.pin;  // Pobieramy pin z przekazanych danych
   const [comments, setComments] = useState<{ username: string; text: string }[]>([]);
   const [newComment, setNewComment] = useState("");
-  const [user, setUser] = useState<any>(null); // Dodajemy stan dla użytkownika
-  const timestampDate = pin.timestamp ? new Date(pin.timestamp) : new Date(); 
+  const [user, setUser] = useState<any>(null);  // Dodajemy stan dla użytkownika
+  const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date(); 
 
   useEffect(() => {
     const auth = getAuth();
@@ -74,8 +74,7 @@ const Details: React.FC = () => {
   };
 
   if (!pin?.id) {
-    alert("Brak danych pin, nie można dodać komentarza.");
-    return null;
+    return <div>Loading...</div>; // Możesz dodać komunikat, jeśli `pin` nie jest dostępny
   }
 
   return (
