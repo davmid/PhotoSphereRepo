@@ -13,7 +13,6 @@ const Navbar: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  // Read username filter from URL (for keeping the state in input field)
   useEffect(() => {
     const userParam = searchParams.get("user");
     if (userParam) {
@@ -22,16 +21,15 @@ const Navbar: React.FC = () => {
   }, [searchParams]);
 
   const handleSearch = () => {
-    if (!searchUser.trim()) return; // Prevent empty search
+    if (!searchUser.trim()) return;
 
     const queryParams = new URLSearchParams(searchParams);
-    queryParams.set("user", searchUser.trim()); // Set search query
+    queryParams.set("user", searchUser.trim()); 
 
     console.log("🔍 Updating search URL:", `?${queryParams.toString()}`);
     navigate(`?${queryParams.toString()}`, { replace: true }); // Update URL without reloading
   };
 
-  // 🔹 Handle "Enter" key press
   const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") {
       handleSearch();
@@ -51,14 +49,13 @@ const Navbar: React.FC = () => {
       <div className="navbar_left">
         <img src={logo} alt="Logo" className="logo" onClick={() => navigate("/main")} />
 
-        {/* 🔹 Search Box with Enter Key Support */}
         <div className="search-box">
           <input 
             type="text" 
             placeholder="Search by username..."
             value={searchUser}
             onChange={(e) => setSearchUser(e.target.value)}
-            onKeyDown={handleKeyPress} // 🔥 Trigger search on Enter
+            onKeyDown={handleKeyPress} 
           />
           <button onClick={handleSearch}>
             <SearchIcon style={{ color: "white" }} />
@@ -66,7 +63,6 @@ const Navbar: React.FC = () => {
         </div>
       </div>
 
-      {/* 🔹 Keep original Login / Account navigation */}
       {user ? (
         <div className="navbar_right">
           <ul>
@@ -82,7 +78,7 @@ const Navbar: React.FC = () => {
       ) : (
         <div className="navbar_right">
           <ul>
-            <li onClick={() => navigate("/login")}>Log In</li> {/* 🔹 Keep this */}
+            <li onClick={() => navigate("/login")}>Log In</li>
           </ul>
         </div>
       )}
