@@ -1,36 +1,39 @@
 # PhotoSphereRepo
 
-## Opis Projektu
-PhotoSphereRepo to aplikacja webowa stworzona w **React (TypeScript)**, której celem jest zarządzanie i udostępnianie zdjęć. Użytkownicy mogą przeglądać, dodawać, edytować i usuwać zdjęcia w systemie. Projekt wykorzystuje **Firebase** do uwierzytelniania użytkowników oraz przechowywania danych.
+## 📌 Project Description
+PhotoSphereRepo is a modern web application built with **React (TypeScript)**, designed for managing and sharing photos. It allows users to:
+- Browse photos within the system,
+- Add, edit, and delete posts,
+- Securely log in and register using **Firebase**.
 
-## Technologie użyte w projekcie
-- **React (TypeScript)** – Tworzenie interfejsu użytkownika.
-- **CSS** – Stylowanie aplikacji.
-- **Firebase** – Uwierzytelnianie oraz backend dla przechowywania postów.
-- **React Hooks** – Zarządzanie stanem i logiką aplikacji.
+## 🛠 Technologies Used
+- **React (TypeScript)** – Building the user interface.
+- **CSS Modules** – Styling components.
+- **Firebase** – Backend for authentication and data storage.
+- **React Hooks** – Managing application state.
+- **React Router** – Navigation between pages.
 
-## Struktura katalogów
+## 📂 Project Structure
 ```
 PhotoSphereRepo/
-│── public/            # Pliki statyczne
-│── src/               # Główny kod aplikacji
-│   ├── AssetsBase/    # Dane aplikacji (kategorie, użytkownicy, posty)
-│   ├── components/    # Komponenty aplikacji
-│   │   ├── Photoboard # Główne elementy tablicy zdjęć
-│   │   ├── navbar     # Pasek nawigacyjny
-│   │   ├── navigation # Menu boczne
-│   ├── hooks/         # Niestandardowe hooki React
-│   ├── services/      # Konfiguracja Firebase i zabezpieczenie tras
-│   ├── types/         # Definicje typów TypeScript
-│── package.json       # Konfiguracja aplikacji
-│── tsconfig.json      # Konfiguracja TypeScript
+│── public/            # Static files
+│── src/               # Main application code
+│   ├── AssetsBase/    # Application resources (e.g., images, test data)
+│   ├── components/    # UI components
+│   │   ├── Photoboard # Main photo board components
+│   │   ├── navbar     # Navigation bar
+│   │   ├── navigation # Sidebar menu
+│   ├── hooks/         # Custom React hooks
+│   ├── services/      # Firebase configuration and route protection
+│   ├── types/         # TypeScript type definitions
+│── package.json       # Application configuration
+│── tsconfig.json      # TypeScript configuration
 ```
 
-## Kluczowe funkcje w kodzie
+## ⚡ Key Features in the Code
 
-### 1. **Obsługa Firebase (`firebaseConfig.ts`)**
-**Opis**: Plik zawiera konfigurację Firebase do obsługi logowania i przechowywania danych.
-
+### 1️⃣ **Firebase Configuration (`firebaseConfig.ts`)**
+📌 **Description**: Initializes Firebase for authentication and data storage.
 ```typescript
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
@@ -41,38 +44,33 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 ```
 
-### 2. **Uwierzytelnianie użytkownika (`firebaseFunctions.ts`)**
-**Opis**: Funkcje do logowania, rejestracji oraz wylogowywania użytkownika za pomocą Firebase.
-
+### 2️⃣ **User Authentication (`firebaseFunctions.ts`)**
+📌 **Description**: Functions for user login and registration.
 ```typescript
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
-
 export const loginUser = async (email: string, password: string) => {
   return await signInWithEmailAndPassword(auth, email, password);
 };
-
 export const registerUser = async (email: string, password: string) => {
   return await createUserWithEmailAndPassword(auth, email, password);
 };
 ```
 
-### 3. **Obsługa postów (`useFetchPosts.ts`)**
-**Opis**: Hook do pobierania postów z bazy danych.
-
+### 3️⃣ **Fetching Posts (`useFetchPosts.ts`)**
+📌 **Description**: React hook for retrieving user photos from the database.
 ```typescript
 import { useEffect, useState } from "react";
 export const useFetchPosts = () => {
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-    // Pobieranie danych z Firebase lub API
+    // Fetch data from Firebase or API
   }, []);
   return posts;
 };
 ```
 
-### 4. **Tworzenie posta (`CreatePost.tsx`)**
-**Opis**: Komponent umożliwia dodawanie nowych zdjęć przez użytkowników.
-
+### 4️⃣ **Adding New Photos (`CreatePost.tsx`)**
+📌 **Description**: Form for adding new posts.
 ```typescript
 const handleSubmit = async () => {
   const newPost = {
@@ -84,24 +82,39 @@ const handleSubmit = async () => {
 };
 ```
 
-### 5. **Zabezpieczenie tras (`PrivateRoute.tsx`)**
-**Opis**: Komponent sprawdzający, czy użytkownik jest zalogowany.
-
+### 5️⃣ **Route Protection (`PrivateRoute.tsx`)**
+📌 **Description**: Ensures only authenticated users can access certain pages.
 ```typescript
 const PrivateRoute = ({ children }) => {
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
 ```
 
-## Jak uruchomić projekt?
-1. Zainstaluj zależności:
-   ```sh
-   npm install
-   ```
-2. Uruchom aplikację:
-   ```sh
-   npm start
-   ```
+## Available Scripts
 
-## Podsumowanie
-Aplikacja PhotoSphereRepo to platforma do zarządzania zdjęciami, umożliwiająca użytkownikom interakcję z postami. Wykorzystuje **React + TypeScript** i **Firebase** do autoryzacji i przechowywania danych.
+In the project directory, you can run:
+
+### `npm start`
+
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+
+The page will reload if you make edits.\
+You will also see any lint errors in the console.
+
+### `npm test`
+
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+
+### `npm run build`
+
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
+
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
+
+## 📌 Summary
+PhotoSphereRepo is a modern photo management application. It provides users with an intuitive environment for adding and viewing posts, leveraging **React + TypeScript** and **Firebase** for data storage and user authentication.
+
