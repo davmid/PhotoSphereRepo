@@ -10,13 +10,13 @@ const useFetchPosts = (selectedCategory: string, selectedUser: string) => {
         const fetchPosts = async () => {
             setLoading(true);
             try {
-                let q: Query<DocumentData>; // ✅ Correctly define `q` as a Firestore Query type
+                let q: Query<DocumentData>;
 
                 if (selectedCategory !== "All" && selectedUser) {
                     q = query(
                         collection(db, "posts"),
                         where("category", "==", selectedCategory),
-                        where("userId", "==", selectedUser), // ✅ Use userId instead of username
+                        where("userId", "==", selectedUser),
                         orderBy("timestamp", "desc")
                     );
                 } else if (selectedCategory !== "All") {
@@ -28,7 +28,7 @@ const useFetchPosts = (selectedCategory: string, selectedUser: string) => {
                 } else if (selectedUser) {
                     q = query(
                         collection(db, "posts"),
-                        where("userId", "==", selectedUser), // ✅ Use userId
+                        where("userId", "==", selectedUser),
                         orderBy("timestamp", "desc")
                     );
                 } else {
@@ -42,16 +42,15 @@ const useFetchPosts = (selectedCategory: string, selectedUser: string) => {
 
                 const postList = querySnapshot.docs.map((doc) => {
                     const data = doc.data();
-                    console.log("📌 Firestore Post Data:", data); // ✅ Debugging log
 
                     return {
                         id: doc.id,
                         postImage: data.postImage || "https://via.placeholder.com/300",
-                        userId: data.userId || "MISSING_USERID", // ✅ Ensure userId is included
-                        username: data.username || "Unknown", // Keep for debugging
+                        userId: data.userId || "MISSING_USERID", 
+                        username: data.username || "Unknown", 
                         description: data.description || "No description",
                         category: data.category || "Uncategorized",
-                        likedBy: data.likedBy || [], // ✅ Ensure likedBy is included
+                        likedBy: data.likedBy || [], 
                         timestamp: data.timestamp?.toDate
                             ? data.timestamp.toDate().toLocaleString()
                             : "Unknown date",
@@ -60,7 +59,7 @@ const useFetchPosts = (selectedCategory: string, selectedUser: string) => {
 
                 setPins(postList);
             } catch (error) {
-                console.error("❌ Error fetching posts:", error);
+                console.error("Error fetching posts:", error);
             } finally {
                 setLoading(false);
             }
