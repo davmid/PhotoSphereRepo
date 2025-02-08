@@ -18,6 +18,7 @@ const Account: React.FC = () => {
   const [user, setUser] = useState<any>(null);
   const [activeTab, setActiveTab] = useState<"created" | "saved">("created");
   const [userPosts, setUserPosts] = useState<any[]>([]);
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [editing, setEditing] = useState(false);
   const [newUsername, setNewUsername] = useState("");
@@ -26,10 +27,14 @@ const Account: React.FC = () => {
 
   useEffect(() => {
     const auth = getAuth();
-    const unsubscribe = onAuthStateChanged(auth, (loggedInUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (loggedInUser) => {
       setUser(loggedInUser);
       if (loggedInUser?.displayName) {
         setNewUsername(loggedInUser.displayName);
+      }
+
+      if (loggedInUser) {
+        await fetchSavedPosts(loggedInUser.uid);
       }
     });
 
@@ -41,6 +46,37 @@ const Account: React.FC = () => {
       fetchUserPosts();
     }
   }, [user, activeTab]);
+
+  const fetchSavedPosts = async (userId: string) => {
+    setLoading(true);
+    try {
+      const userRef = doc(db, "users", userId);
+      const userSnap = await getDoc(userRef);
+
+      if (userSnap.exists()) {
+        const savedPins = userSnap.data().savedPins || [];
+        if (savedPins.length === 0) {
+          setSavedPosts([]);
+          return;
+        }
+
+        // Fetch saved posts based on savedPins array
+        const postsQuery = query(collection(db, "posts"), where("__name__", "in", savedPins));
+        const postsSnapshot = await getDocs(postsQuery);
+
+        const savedPostsData = postsSnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        setSavedPosts(savedPostsData);
+      }
+    } catch (error) {
+      console.error("Error fetching saved posts:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const fetchUserPosts = async () => {
     if (!user?.uid) return;
@@ -107,10 +143,8 @@ const Account: React.FC = () => {
         return;
       }
   
-      // ✅ Update Firebase Authentication Profile
       await updateProfile(currentUser, { displayName: newUsername });
   
-      // ✅ Update Firestore user document (Check if exists first)
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
   
@@ -120,7 +154,7 @@ const Account: React.FC = () => {
         await setDoc(userRef, {
           username: newUsername,
           email: user.email || "",
-          avatarUrl: "", // Default empty
+          avatarUrl: "", 
           createdAt: new Date(),
         });
       }
@@ -140,7 +174,6 @@ const Account: React.FC = () => {
       alert("Password must be at least 6 characters long.");
       return;
     }
-  
     try {
       const auth = getAuth();
       await updatePassword(auth.currentUser!, newPassword);
@@ -272,10 +305,19 @@ const Account: React.FC = () => {
 
             {activeTab === "saved" && (
               <div className="profile-content">
-                <p>You don't have any saved Pins yet</p>
-                <Button variant="outlined" onClick={() => handleNavigation("/main")}>
-                  Find Pins
-                </Button>
+                {loading ? (
+                  <p>Loading saved posts...</p>
+                ) : savedPosts.length > 0 ? (
+                  <div className="image-grid">
+                    {savedPosts.map((post) => (
+                      <div key={post.id} className="post-card" onClick={() => handleInfoClick(post)}>
+                        <img src={post.postImage} alt="Saved Post" className="uploaded-image" />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p>You don't have any saved Pins yet.</p>
+                )}
               </div>
             )}
           </div>

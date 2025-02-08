@@ -4,6 +4,7 @@ import { auth } from '../services/firebaseConfig';
 import './styles/Register.css';
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../services/firebaseConfig";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Register: React.FC = () => {
   const [name, setName] = useState<string>('');
@@ -12,6 +13,7 @@ const Register: React.FC = () => {
   const [repeatPassword, setRepeatPassword] = useState<string>('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -41,16 +43,16 @@ const Register: React.FC = () => {
     }
 
     try {
-        // 🔥 Step 1: Create the user in Firebase Authentication
+        
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // 🔥 Step 2: Update the user's profile with their display name
+        
         await updateProfile(user, { displayName: name });
 
         console.log("✅ User registered successfully:", user);
 
-        // 🔥 Step 3: Save user details in Firestore `users` collection
+        
         const userRef = doc(db, "users", user.uid);
         await setDoc(userRef, {
             userId: user.uid,
@@ -63,6 +65,7 @@ const Register: React.FC = () => {
         console.log("✅ User data saved to Firestore");
 
         alert("Registration successful!");
+        navigate("/login")
     } catch (err: any) {
         setError(err.message);
         console.error("❌ Error during registration:", err);
