@@ -43,15 +43,9 @@ const Register: React.FC = () => {
     }
 
     try {
-        
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-
-        
         await updateProfile(user, { displayName: name });
-
-        console.log("✅ User registered successfully:", user);
-
         
         const userRef = doc(db, "users", user.uid);
         await setDoc(userRef, {
@@ -62,13 +56,13 @@ const Register: React.FC = () => {
             joinedAt: new Date(), // Save registration timestamp
         });
 
-        console.log("✅ User data saved to Firestore");
+        console.log("User data saved to Firestore");
 
         alert("Registration successful!");
         navigate("/login")
     } catch (err: any) {
         setError(err.message);
-        console.error("❌ Error during registration:", err);
+        console.error("Error during registration:", err);
     } finally {
         setLoading(false);
     }

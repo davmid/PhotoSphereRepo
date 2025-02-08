@@ -6,13 +6,10 @@ import useFetchPosts from '../../hooks/useFetchPosts';
 
 const PinBoard: React.FC = () => {
     const [searchParams] = useSearchParams();
-    
     const selectedCategory = searchParams.get("category") || "All";
     const selectedUser = searchParams.get("userId") || "";
-    
     const { pins, loading } = useFetchPosts(selectedCategory, selectedUser);
     
-    console.log("📌 Pins Data from useFetchPosts:", pins); // ✅ Debug log
     return (
         <div>
             <div className="pin_container">
