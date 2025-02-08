@@ -5,6 +5,7 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import BookmarkBorderIcon from "@mui/icons-material/BookmarkBorder";
 import { useNavigate } from 'react-router-dom';
+import { onSnapshot } from "firebase/firestore";
 import { db } from "../../services/firebaseConfig";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -13,7 +14,7 @@ interface PinProps {
     pin: {
         id: string;
         postImage: string;
-        username: string;
+        userId: string;
         description: string;
         likedBy: [];  // Tablica z UID użytkowników, którzy polubili post
         timestamp: string | Date;
@@ -27,6 +28,7 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize }) => {
     const [hasLiked, setHasLiked] = useState<boolean>(false);  // Stan, który sprawdza, czy użytkownik polubił post
     const [currentUser, setCurrentUser] = useState<any>(null);  // Przechowujemy bieżącego użytkownika
     const [likes, setLikes] = useState<number>(pin.likedBy?.length || 0);  // Liczba polubień na podstawie długości likedBy
+    const [username, setUsername] = useState<string>("");
     const timestampDate = pin.timestamp ? new Date(pin.timestamp) : new Date();
 
     // Subskrypcja na zmiany stanu użytkownika Firebase
@@ -71,6 +73,33 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize }) => {
           fetchLikes();
       }
   }, [currentUser, pin.id]);  // Zależy od currentUser i pin.id, ponieważ pin.likedBy jest częścią pin.id
+
+  useEffect(() => {
+      if (!pin.userId) return;
+  
+      console.log("Setting up Firestore listener for userId:", pin.userId);
+  
+      const userRef = doc(db, "users", pin.userId);
+  
+      const unsubscribe = onSnapshot(userRef, (userSnap) => {
+          if (userSnap.exists()) {
+              console.log("Live update: Username changed to", userSnap.data().username);
+              setUsername(userSnap.data().username || "Unknown");
+          } else {
+              console.log("User not found in Firestore.");
+              setUsername("Unknown");
+          }
+      });
+  
+      return () => unsubscribe(); // Clean up listener
+  }, [pin.userId]);
+  
+
+  useEffect(() => {
+    console.log("🔥 Pin Data Received:", pin);
+    console.log("🔍 pin.userId:", pin.userId);
+    }, [pin]);
+
   
     // Funkcja do pobrania liczby polubień z Firestore
     useEffect(() => {
@@ -137,58 +166,66 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize }) => {
     const handleLikeClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         handleLike(pin.id);
     };
+    useEffect(() => {
+        console.log("Fetching username for userId:", pin.userId);
+    }, [pin.userId]);
+    
 
     return (
         <div
-            className={`pin ${randomSize}`}
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+          className={`pin ${randomSize}`}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Zdjęcie na pełny obszar */}
-            <img src={pin.postImage} alt={pin.description || "Pinned image"} className="pin__image" onClick={handleInfoClick} />
-
-            {isHovered && (
-                <div className="pin__likes">
-                    {/* Liczba polubień jest teraz oparta na długości tablicy likedBy */}
-                    <span>Likes: {likes}</span>
+          {/* Image */}
+          <img
+            src={pin.postImage}
+            alt={pin.description || "Pinned image"}
+            className="pin__image"
+            onClick={handleInfoClick}
+          />
+    
+          {isHovered && (
+            <div className="pin__likes">
+              <span>Likes: {likes}</span>
+            </div>
+          )}
+    
+          {isHovered && (
+            <div className="pin__overlay">
+              <div className="pin__author">
+                <Avatar className="pin__avatar">
+                  {username.charAt(0).toUpperCase()}
+                </Avatar>
+                <div className="pin__author-info">
+                  <span className="pin__author-name">{username}</span>
+                  <span className="pin__timestamp">
+                    {new Intl.DateTimeFormat("pl-PL", {
+                      day: "2-digit",
+                      month: "2-digit",
+                      year: "numeric",
+                    }).format(timestampDate)}
+                  </span>
                 </div>
-            )}
-
-            {isHovered && (
-                <div className="pin__overlay">
-                    <div className="pin__author">
-                        <Avatar className="pin__avatar">{pin.username.charAt(0).toUpperCase()}</Avatar>
-                        <div className="pin__author-info">
-                            <span className="pin__author-name">{pin.username}</span>
-                            <span className="pin__timestamp"> {new Intl.DateTimeFormat("pl-PL", {
-                                day: "2-digit",
-                                month: "2-digit",
-                                year: "numeric"
-                            }).format(timestampDate)}
-                            </span>
-
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {isHovered && currentUser && (
-                <div className="pin__buttons">
-                    {hasLiked ? (
-                        // Jeśli post jest już polubiony przez użytkownika
-                        <button className="pin__button" onClick={handleLikeClick}>
-                            <FavoriteIcon />
-                        </button>
-                    ) : (
-                        // Jeśli post nie jest polubiony przez użytkownika
-                        <button className="pin__button" onClick={handleLikeClick}>
-                            <FavoriteBorderIcon />
-                        </button>
-                    )}
-                </div>
-            )}
+              </div>
+            </div>
+          )}
+    
+          {isHovered && currentUser && (
+            <div className="pin__buttons">
+              {hasLiked ? (
+                <button className="pin__button" onClick={() => handleLike(pin.id)}>
+                  <FavoriteIcon />
+                </button>
+              ) : (
+                <button className="pin__button" onClick={() => handleLike(pin.id)}>
+                  <FavoriteBorderIcon />
+                </button>
+              )}
+            </div>
+          )}
         </div>
-    );
-};
-
-export default Pin;
+      );
+    };
+    
+    export default Pin;

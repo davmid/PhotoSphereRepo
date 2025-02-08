@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../services/firebaseConfig';
 import './styles/Register.css';
+import { collection, doc, setDoc } from "firebase/firestore";
+import { db } from "../services/firebaseConfig";
 
 const Register: React.FC = () => {
   const [name, setName] = useState<string>('');
@@ -33,26 +35,41 @@ const Register: React.FC = () => {
     setLoading(true);
 
     if (password !== repeatPassword) {
-      setError("Passwords do not match!");
-      setLoading(false);
-      return;
+        setError("Passwords do not match!");
+        setLoading(false);
+        return;
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
+        // 🔥 Step 1: Create the user in Firebase Authentication
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
 
-      await updateProfile(user, { displayName: name });
+        // 🔥 Step 2: Update the user's profile with their display name
+        await updateProfile(user, { displayName: name });
 
-      console.log('User registered successfully:', user);
-      alert('Registration successful!');
+        console.log("✅ User registered successfully:", user);
+
+        // 🔥 Step 3: Save user details in Firestore `users` collection
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, {
+            userId: user.uid,
+            username: name,
+            email: user.email || "",
+            avatarUrl: "", // Can be updated later
+            joinedAt: new Date(), // Save registration timestamp
+        });
+
+        console.log("✅ User data saved to Firestore");
+
+        alert("Registration successful!");
     } catch (err: any) {
-      setError(err.message);
-      console.error('Error during registration:', err);
+        setError(err.message);
+        console.error("❌ Error during registration:", err);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <div className="register-wrapper">

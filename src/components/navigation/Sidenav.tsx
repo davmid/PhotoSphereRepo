@@ -56,7 +56,7 @@ const Sidenav: React.FC = () => {
     } else {
         queryParams.set("category", category);
     }
-    navigate(`?${queryParams.toString()}`, { replace: true });
+    navigate(`/main?${queryParams.toString()}`, { replace: true });
   };
 
   return (

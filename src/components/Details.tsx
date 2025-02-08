@@ -21,6 +21,7 @@ const Details: React.FC = () => {
   const navigate = useNavigate();
   const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date();
   const [savedPins, setSavedPins] = useState<string[]>([]);
+  const [postUsername, setPostUsername] = useState<string>("Unknown");
 
 
   useEffect(() => {
@@ -50,6 +51,25 @@ const Details: React.FC = () => {
       fetchSavedPins();
     }
   }, [user]);
+
+  useEffect(() => {
+    if (pin?.userId) {
+      const fetchUsername = async () => {
+        try {
+          const userRef = doc(db, "users", pin.userId);
+          const userSnap = await getDoc(userRef);
+          if (userSnap.exists()) {
+            setPostUsername(userSnap.data().username || "Unknown"); // ✅ Set username from Firestore
+          } else {
+            console.log("User not found for userId:", pin.userId);
+          }
+        } catch (error) {
+          console.error("Error fetching username:", error);
+        }
+      };
+      fetchUsername();
+    }
+  }, [pin?.userId]);
 
   useEffect(() => {
     const auth = getAuth();
@@ -309,7 +329,7 @@ const Details: React.FC = () => {
                 <h4>{pin.description}</h4>
               </div>
               <div className="username_date">
-                <h4>{pin.username} - {timestampDate.toLocaleDateString()}</h4>
+                <h4>{postUsername} - {timestampDate.toLocaleDateString()}</h4>
               </div>
 
               <h4>Comments:</h4>

@@ -2,28 +2,17 @@ import React from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import Pin from './Pin';
 import '../styles/PinBoard.css';
-import { categories } from '../../AssetsBase/Categories';
 import useFetchPosts from '../../hooks/useFetchPosts';
 
 const PinBoard: React.FC = () => {
     const [searchParams] = useSearchParams();
-    const navigate = useNavigate();
     
     const selectedCategory = searchParams.get("category") || "All";
-    const selectedUser = searchParams.get("user") || "";
+    const selectedUser = searchParams.get("userId") || "";
     
     const { pins, loading } = useFetchPosts(selectedCategory, selectedUser);
-
-    const handleCategoryClick = (category: string) => {
-        const queryParams = new URLSearchParams(searchParams);
-        if (category === "All") {
-            queryParams.delete("category");
-        } else {
-            queryParams.set("category", category);
-        }
-        navigate(`?${queryParams.toString()}`, { replace: true });
-    };
-
+    
+    console.log("📌 Pins Data from useFetchPosts:", pins); // ✅ Debug log
     return (
         <div>
             <div className="pin_container">
