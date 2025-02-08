@@ -160,7 +160,13 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize }) => {
                         <Avatar className="pin__avatar">{pin.username.charAt(0).toUpperCase()}</Avatar>
                         <div className="pin__author-info">
                             <span className="pin__author-name">{pin.username}</span>
-                            <span className="pin__timestamp">{timestampDate.toLocaleDateString()}</span>
+                            <span className="pin__timestamp"> {new Intl.DateTimeFormat("pl-PL", {
+                                day: "2-digit",
+                                month: "2-digit",
+                                year: "numeric"
+                            }).format(timestampDate)}
+                            </span>
+
                         </div>
                     </div>
                 </div>

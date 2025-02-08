@@ -51,6 +51,7 @@
     display: flex;
     align-items: center; /* Wyrównanie poziome (centrowanie) */
     gap: 8px; /* Odstęp między awatarem a nazwą */
+    font-size: 12px;
 }
 
 .pin__author-info {

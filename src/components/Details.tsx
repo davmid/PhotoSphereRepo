@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
-import { collection, getDocs, query, where, addDoc, deleteDoc, doc, getDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./styles/Details.css";
 import Navbar from "./navbar/Navbar";
 import Sidenav from "./navigation/Sidenav";
 import { Comment } from "../types/interfaces"; 
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const Details: React.FC = () => {
   const location = useLocation();
@@ -14,6 +16,8 @@ const Details: React.FC = () => {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [user, setUser] = useState<any>(null); // User authentication state
+  const [hasLiked, setHasLiked] = useState(false);
+  const [likes, setLikes] = useState(0);
   const navigate = useNavigate();
   const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date();
 
@@ -43,6 +47,27 @@ const Details: React.FC = () => {
       alert("An error occurred while loading comments.");
     }
   };
+
+  const handleLike = async () => {
+    if (!user) {
+      alert("You must be logged in to like a post.");
+      return;
+    }
+    const postRef = doc(db, "posts", pin.id);
+    const postSnapshot = await getDoc(postRef);
+    if (postSnapshot.exists()) {
+      let likedBy = postSnapshot.data()?.likedBy || [];
+      if (likedBy.includes(user.uid)) {
+        likedBy = likedBy.filter((uid: string) => uid !== user.uid);
+      } else {
+        likedBy.push(user.uid);
+      }
+      await updateDoc(postRef, { likedBy });
+      setLikes(likedBy.length);
+      setHasLiked(likedBy.includes(user.uid));
+    }
+  };
+
 
   useEffect(() => {
     loadComments();
@@ -132,6 +157,19 @@ const Details: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+          const fetchLikes = async () => {
+              const postRef = doc(db, "posts", pin.id);
+              const postSnapshot = await getDoc(postRef);
+              if (postSnapshot.exists()) {
+                  const postData = postSnapshot.data();
+                  setLikes(postData?.likedBy?.length || 0);
+              }
+          };
+  
+          fetchLikes();
+      }, [pin.id]);
+
   // Debugging Logs
   useEffect(() => {
     console.log("Logged-in User:", user);
@@ -165,10 +203,25 @@ const Details: React.FC = () => {
                 </button>
               )}
 
-              <div className="button_panel">
-                <button className="button">Like {pin.likes}</button>
-                <button className="button">Save</button>
-              </div>
+              
+              {user && (
+                <div className="button_panel">
+                    <button className="button">Save</button>
+                    {hasLiked ? (
+                        // Jeśli post jest już polubiony przez użytkownika
+                        <button className="like-btn" onClick={handleLike}>
+                            <FavoriteIcon />
+                        </button>
+                    ) : (
+                        // Jeśli post nie jest polubiony przez użytkownika
+                        <button className="like-btn" onClick={handleLike}>
+                            <FavoriteBorderIcon />
+                        </button>
+                    )}
+                    <h3>Likes: {likes}</h3>
+                </div>
+            )}
+              
 
               <div className="image_description">
                 <h4>{pin.description}</h4>
@@ -183,7 +236,7 @@ const Details: React.FC = () => {
                   <ul>
                     {comments.map((comment) => (
                       <li key={comment.id} className="photo__comment">
-                        <strong>{comment.username}:</strong> {comment.text}
+                        <strong>{comment.username}: &nbsp; </strong> {comment.text}
                         {user && user.uid === comment.userId && (
                           <button 
                             className="delete-comment-btn"
