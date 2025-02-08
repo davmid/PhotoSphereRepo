@@ -174,9 +174,6 @@ const Pin: React.FC<PinProps> = ({ pin, randomSize }) => {
 
             {isHovered && currentUser && (
                 <div className="pin__buttons">
-                    <button className="pin__button">
-                        <BookmarkBorderIcon />
-                    </button>
                     {hasLiked ? (
                         // Jeśli post jest już polubiony przez użytkownika
                         <button className="pin__button" onClick={handleLikeClick}>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
-import { collection, getDocs, query, where, addDoc, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, query, where, addDoc, deleteDoc, doc, getDoc, setDoc , updateDoc } from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./styles/Details.css";
@@ -20,12 +20,53 @@ const Details: React.FC = () => {
   const [likes, setLikes] = useState(0);
   const navigate = useNavigate();
   const timestampDate = pin?.timestamp ? new Date(pin.timestamp) : new Date();
+  const [savedPins, setSavedPins] = useState<string[]>([]);
+
 
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
     });
+    return () => unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      const fetchSavedPins = async () => {
+        try {
+          const userRef = doc(db, "users", user.uid);
+          const userSnap = await getDoc(userRef);
+  
+          if (userSnap.exists()) {
+            const userData = userSnap.data();
+            setSavedPins(userData?.savedPins || []);
+          }
+        } catch (error) {
+          console.error("Error fetching saved pins:", error);
+        }
+      };
+  
+      fetchSavedPins();
+    }
+  }, [user]);
+
+  useEffect(() => {
+    const auth = getAuth();
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+      setUser(currentUser);
+  
+      if (currentUser) {
+        const userRef = doc(db, "users", currentUser.uid);
+        const userSnap = await getDoc(userRef);
+  
+        if (!userSnap.exists()) {
+          // Tworzymy dokument użytkownika z pustą tablicą savedPins, jeśli jeszcze nie istnieje
+          await setDoc(userRef, { savedPins: [] });
+        }
+      }
+    });
+  
     return () => unsubscribe();
   }, []);
 
@@ -184,6 +225,45 @@ const Details: React.FC = () => {
   }
   console.log("Final pin.userId:", pin.userId);
 
+
+  const handleSavePin = async () => {
+    if (!user) {
+      alert("You must be logged in to save a post.");
+      return;
+    }
+  
+    try {
+      const userRef = doc(db, "users", user.uid); // Dokument użytkownika
+      const userSnap = await getDoc(userRef);
+  
+      if (userSnap.exists()) {
+        let savedPins = userSnap.data()?.savedPins || [];
+  
+        // Sprawdzamy, czy pin już jest zapisany
+        if (savedPins.includes(pin.id)) {
+          savedPins = savedPins.filter((savedPinId: string) => savedPinId !== pin.id);
+        } else {
+          savedPins.push(pin.id);
+        }
+  
+        // Aktualizujemy zapisane piny w dokumencie użytkownika
+        await updateDoc(userRef, { savedPins });
+        
+        // Ustawiamy zaktualizowaną tablicę zapisanych pinów w stanie
+        setSavedPins(savedPins);
+  
+        console.log(savedPins.includes(pin.id) ? "Pin saved!" : "Pin removed!");
+      } else {
+        console.log("User document not found.");
+      }
+    } catch (error) {
+      console.error("Error saving pin:", error);
+      alert("An error occurred while saving the pin.");
+    }
+  };
+
+  
+
   return (
     <div className="container_navBar">
       <Navbar />
@@ -206,7 +286,9 @@ const Details: React.FC = () => {
               
               {user && (
                 <div className="button_panel">
-                    <button className="button">Save</button>
+                  <button className="button" onClick={handleSavePin}>
+                    {savedPins.includes(pin.id) ? "Unsave" : "Save"} Pin
+                  </button>
                     {hasLiked ? (
                         // Jeśli post jest już polubiony przez użytkownika
                         <button className="like-btn" onClick={handleLike}>
