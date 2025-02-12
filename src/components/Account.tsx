@@ -2,14 +2,26 @@ import React, { useState, useEffect } from "react";
 import "./styles/Account.css";
 import Sidenav from "./navigation/Sidenav";
 import Navbar from "./navbar/Navbar";
-import { getAuth, onAuthStateChanged, updatePassword, updateProfile } from "firebase/auth";
+import {
+  getAuth,
+  onAuthStateChanged,
+  updatePassword,
+  updateProfile,
+} from "firebase/auth";
 import { Button, TextField } from "@mui/material";
 import { Avatar } from "@mui/material";
 import { exampleUsers } from "../AssetsBase/Users";
 import { useNavigate } from "react-router-dom";
-import { 
-  collection, query, where, getDocs, orderBy, 
-  doc, updateDoc, getDoc, setDoc
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  orderBy,
+  doc,
+  updateDoc,
+  getDoc,
+  setDoc,
 } from "firebase/firestore";
 
 import { db } from "../services/firebaseConfig";
@@ -61,7 +73,10 @@ const Account: React.FC = () => {
         }
 
         // Fetch saved posts based on savedPins array
-        const postsQuery = query(collection(db, "posts"), where("__name__", "in", savedPins));
+        const postsQuery = query(
+          collection(db, "posts"),
+          where("__name__", "in", savedPins)
+        );
         const postsSnapshot = await getDocs(postsQuery);
 
         const savedPostsData = postsSnapshot.docs.map((doc) => ({
@@ -137,30 +152,30 @@ const Account: React.FC = () => {
     try {
       const auth = getAuth();
       const currentUser = auth.currentUser;
-  
+
       if (!currentUser) {
         alert("No authenticated user found.");
         return;
       }
-  
+
       await updateProfile(currentUser, { displayName: newUsername });
-  
+
       const userRef = doc(db, "users", user.uid);
       const userSnap = await getDoc(userRef);
-  
+
       if (userSnap.exists()) {
         await updateDoc(userRef, { username: newUsername });
       } else {
         await setDoc(userRef, {
           username: newUsername,
           email: user.email || "",
-          avatarUrl: "", 
+          avatarUrl: "",
           createdAt: new Date(),
         });
       }
-  
+
       setUser({ ...user, displayName: newUsername });
-  
+
       alert("Profile updated successfully!");
       setEditing(false);
     } catch (error) {
@@ -168,7 +183,7 @@ const Account: React.FC = () => {
       alert("Failed to update profile.");
     }
   };
-  
+
   const handleUpdatePassword = async () => {
     if (!user || newPassword.length < 6) {
       alert("Password must be at least 6 characters long.");
@@ -184,7 +199,6 @@ const Account: React.FC = () => {
       alert("Failed to update password. Please re-authenticate.");
     }
   };
-  
 
   const currentUser = user || exampleUsers[0];
 
@@ -252,7 +266,11 @@ const Account: React.FC = () => {
                     <h1>{currentUser.displayName || "Anonymous"}</h1>
                     <p>@{currentUser.email || "No email"}</p>
                     <div className="profile-buttons">
-                      <button type="button" className="button_profil" onClick={toggleEditProfile}>
+                      <button
+                        type="button"
+                        className="button_profil"
+                        onClick={toggleEditProfile}
+                      >
                         Edit profile
                       </button>
                     </div>
@@ -310,8 +328,16 @@ const Account: React.FC = () => {
                 ) : savedPosts.length > 0 ? (
                   <div className="image-grid">
                     {savedPosts.map((post) => (
-                      <div key={post.id} className="post-card" onClick={() => handleInfoClick(post)}>
-                        <img src={post.postImage} alt="Saved Post" className="uploaded-image" />
+                      <div
+                        key={post.id}
+                        className="post-card"
+                        onClick={() => handleInfoClick(post)}
+                      >
+                        <img
+                          src={post.postImage}
+                          alt="Saved Post"
+                          className="uploaded-image"
+                        />
                       </div>
                     ))}
                   </div>

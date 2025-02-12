@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import "./Sidenav.css";
-import AddIcon from '@mui/icons-material/Add';
-import EditIcon from '@mui/icons-material/Edit';
-import { categories } from '../../AssetsBase/Categories'
-import { db } from '../../services/firebaseConfig'; // Importujemy db z Firebase
+import AddIcon from "@mui/icons-material/Add";
+import EditIcon from "@mui/icons-material/Edit";
+import { categories } from "../../AssetsBase/Categories";
+import { db } from "../../services/firebaseConfig"; // Importujemy db z Firebase
 import { doc, getDoc } from "firebase/firestore"; // Używamy getDoc do pobierania dokumentu
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 
@@ -37,7 +37,8 @@ const Sidenav: React.FC = () => {
 
         if (docSnap.exists()) {
           const post = docSnap.data();
-          if (post.userId === user.uid) { // Sprawdzamy, czy zalogowany użytkownik jest właścicielem
+          if (post.userId === user.uid) {
+            // Sprawdzamy, czy zalogowany użytkownik jest właścicielem
             setIsOwner(true);
           } else {
             setIsOwner(false);
@@ -48,13 +49,12 @@ const Sidenav: React.FC = () => {
     }
   }, [id, user]); // Uruchamiamy, gdy id lub user się zmienia
 
-
   const handleCategoryClick = (category: string) => {
     const queryParams = new URLSearchParams(searchParams);
     if (category === "All") {
-        queryParams.delete("category");
+      queryParams.delete("category");
     } else {
-        queryParams.set("category", category);
+      queryParams.set("category", category);
     }
     navigate(`/main?${queryParams.toString()}`, { replace: true });
   };
@@ -78,7 +78,10 @@ const Sidenav: React.FC = () => {
 
       {/* Przycisk dodawania */}
       {user ? (
-        <button className="floating-button-add" onClick={() => handleNavigation("/create")}>
+        <button
+          className="floating-button-add"
+          onClick={() => handleNavigation("/create")}
+        >
           <AddIcon />
         </button>
       ) : (
@@ -86,7 +89,10 @@ const Sidenav: React.FC = () => {
       )}
 
       {user && isOwner ? (
-        <button className="floating-button-edit" onClick={() => handleNavigation(`/edit/${id}`)}>
+        <button
+          className="floating-button-edit"
+          onClick={() => handleNavigation(`/edit/${id}`)}
+        >
           <EditIcon />
         </button>
       ) : (

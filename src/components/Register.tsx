@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth } from '../services/firebaseConfig';
-import './styles/Register.css';
+import React, { useState } from "react";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { auth } from "../services/firebaseConfig";
+import "./styles/Register.css";
 import { collection, doc, setDoc } from "firebase/firestore";
 import { db } from "../services/firebaseConfig";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
 const Register: React.FC = () => {
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [repeatPassword, setRepeatPassword] = useState<string>('');
+  const [name, setName] = useState<string>("");
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [repeatPassword, setRepeatPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -27,7 +27,9 @@ const Register: React.FC = () => {
     setPassword(e.target.value);
   };
 
-  const handleRepeatPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRepeatPasswordChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setRepeatPassword(e.target.value);
   };
 
@@ -37,36 +39,40 @@ const Register: React.FC = () => {
     setLoading(true);
 
     if (password !== repeatPassword) {
-        setError("Passwords do not match!");
-        setLoading(false);
-        return;
+      setError("Passwords do not match!");
+      setLoading(false);
+      return;
     }
 
     try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        const user = userCredential.user;
-        await updateProfile(user, { displayName: name });
-        
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, {
-            userId: user.uid,
-            username: name,
-            email: user.email || "",
-            avatarUrl: "", // Can be updated later
-            joinedAt: new Date(), // Save registration timestamp
-        });
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      const user = userCredential.user;
+      await updateProfile(user, { displayName: name });
 
-        console.log("User data saved to Firestore");
+      const userRef = doc(db, "users", user.uid);
+      await setDoc(userRef, {
+        userId: user.uid,
+        username: name,
+        email: user.email || "",
+        avatarUrl: "", // Can be updated later
+        joinedAt: new Date(), // Save registration timestamp
+      });
 
-        alert("Registration successful!");
-        navigate("/login")
+      console.log("User data saved to Firestore");
+
+      alert("Registration successful!");
+      navigate("/login");
     } catch (err: any) {
-        setError(err.message);
-        console.error("Error during registration:", err);
+      setError(err.message);
+      console.error("Error during registration:", err);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   return (
     <div className="register-wrapper">
@@ -85,7 +91,9 @@ const Register: React.FC = () => {
             {error && <p className="error-message">{error}</p>}
 
             <div className="form-group">
-              <label htmlFor="name" className="register-label">Name</label>
+              <label htmlFor="name" className="register-label">
+                Name
+              </label>
               <input
                 type="text"
                 id="name"
@@ -97,7 +105,9 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="email" className="register-label">Email Address</label>
+              <label htmlFor="email" className="register-label">
+                Email Address
+              </label>
               <input
                 type="email"
                 id="email"
@@ -109,7 +119,9 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="register-label">Password</label>
+              <label htmlFor="password" className="register-label">
+                Password
+              </label>
               <input
                 type="password"
                 id="password"
@@ -121,7 +133,9 @@ const Register: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="repeatPassword" className="register-label">Repeat Password</label>
+              <label htmlFor="repeatPassword" className="register-label">
+                Repeat Password
+              </label>
               <input
                 type="password"
                 id="repeatPassword"
@@ -132,8 +146,12 @@ const Register: React.FC = () => {
               />
             </div>
 
-            <button type="submit" className="register-button" disabled={loading}>
-              {loading ? 'Registering...' : 'Register'}
+            <button
+              type="submit"
+              className="register-button"
+              disabled={loading}
+            >
+              {loading ? "Registering..." : "Register"}
             </button>
 
             <div className="already-account">

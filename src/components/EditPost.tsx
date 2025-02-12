@@ -12,7 +12,7 @@ const EditPost: React.FC = () => {
   const [postDescription, setPostDescription] = useState("");
   const [postImage, setPostImage] = useState(""); // Dodane pole do obrazu posta
   const [user, setUser] = useState<any>(null); // Stan dla użytkownika
-  const [postCategory, setPostCategory] = useState(""); 
+  const [postCategory, setPostCategory] = useState("");
   const [isLoading, setIsLoading] = useState(true); // Dodano stan ładowania
   const [isUpdated, setIsUpdated] = useState(false); // Stan do sprawdzenia, czy zostały wprowadzone zmiany
   const navigate = useNavigate(); // Nawigacja po zapisaniu zmian
@@ -64,7 +64,7 @@ const EditPost: React.FC = () => {
       const postRef = doc(db, "posts", postId);
       await updateDoc(postRef, {
         description: postDescription,
-        postImage: postImage
+        postImage: postImage,
       });
       navigate(`/main`); // Przekierowanie do strony szczegółów
     } catch (error) {
@@ -87,14 +87,14 @@ const EditPost: React.FC = () => {
         <div className="detailspage">
           <div className="details">
             <div className="imagedisplay">
-                <img src={postImage} alt={postDescription || "Post image"} />
+              <img src={postImage} alt={postDescription || "Post image"} />
             </div>
             <div className="contentdisplay">
-            <div className="button_panel">
+              <div className="button_panel">
                 <h4>Edit Post</h4>
               </div>
               <div className="image_description">
-              <h5>Post Description</h5>
+                <h5>Post Description</h5>
                 <textarea
                   id="description"
                   value={postDescription}
@@ -106,7 +106,7 @@ const EditPost: React.FC = () => {
                 />
               </div>
               <div>
-              <h5>Post Category</h5>
+                <h5>Post Category</h5>
                 <select
                   id="category"
                   value={postCategory}
@@ -124,7 +124,7 @@ const EditPost: React.FC = () => {
                 </select>
               </div>
               <div className="save_btn">
-              <button
+                <button
                   className="button"
                   onClick={handleSavePost}
                   disabled={!isUpdated || !user} // Przycisk nieaktywny, jeśli nie ma zmian lub użytkownik nie jest zalogowany
@@ -132,11 +132,11 @@ const EditPost: React.FC = () => {
                   Save Changes
                 </button>
               </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
+    </div>
   );
 };
 

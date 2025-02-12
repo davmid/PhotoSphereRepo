@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../services/firebaseConfig';
-import './styles/Login.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../services/firebaseConfig";
+import "./styles/Login.css";
 
 const Login: React.FC = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const navigate = useNavigate();
@@ -25,12 +25,16 @@ const Login: React.FC = () => {
     setLoading(true);
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('User logged in:', userCredential.user);
-      navigate('/main');
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("User logged in:", userCredential.user);
+      navigate("/main");
     } catch (error: any) {
       setError(error.message);
-      console.error('Error during login:', error);
+      console.error("Error during login:", error);
     } finally {
       setLoading(false);
     }
@@ -53,7 +57,9 @@ const Login: React.FC = () => {
             {error && <p className="error-message">{error}</p>}
 
             <div className="form-group">
-              <label htmlFor="email" className="login-label">Email Address</label>
+              <label htmlFor="email" className="login-label">
+                Email Address
+              </label>
               <input
                 type="email"
                 id="email"
@@ -65,7 +71,9 @@ const Login: React.FC = () => {
             </div>
 
             <div className="form-group">
-              <label htmlFor="password" className="login-label">Password</label>
+              <label htmlFor="password" className="login-label">
+                Password
+              </label>
               <input
                 type="password"
                 id="password"
@@ -80,11 +88,13 @@ const Login: React.FC = () => {
               <label>
                 <input type="checkbox" /> Remember
               </label>
-              <a href="#" className="forgot-password">Forgot Password?</a>
+              <a href="#" className="forgot-password">
+                Forgot Password?
+              </a>
             </div>
 
             <button type="submit" className="login-button" disabled={loading}>
-              {loading ? 'Logging in...' : 'Submit'}
+              {loading ? "Logging in..." : "Submit"}
             </button>
 
             <div className="create-account">

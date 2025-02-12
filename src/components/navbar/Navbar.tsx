@@ -5,7 +5,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import logo from "../../photos/OURLOGO.png";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { auth } from '../../services/firebaseConfig';
+import { auth } from "../../services/firebaseConfig";
 
 const Navbar: React.FC = () => {
   const [user, setUser] = useState<any>(null);
@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
     if (!searchUser.trim()) return;
 
     const queryParams = new URLSearchParams(searchParams);
-    queryParams.set("user", searchUser.trim()); 
+    queryParams.set("user", searchUser.trim());
 
     navigate(`?${queryParams.toString()}`, { replace: true }); // Update URL without reloading
   };
@@ -46,15 +46,20 @@ const Navbar: React.FC = () => {
   return (
     <div className="navbar">
       <div className="navbar_left">
-        <img src={logo} alt="Logo" className="logo" onClick={() => navigate("/main")} />
+        <img
+          src={logo}
+          alt="Logo"
+          className="logo"
+          onClick={() => navigate("/main")}
+        />
 
         <div className="search-box">
-          <input 
-            type="text" 
+          <input
+            type="text"
             placeholder="Search by username..."
             value={searchUser}
             onChange={(e) => setSearchUser(e.target.value)}
-            onKeyDown={handleKeyPress} 
+            onKeyDown={handleKeyPress}
           />
           <button onClick={handleSearch}>
             <SearchIcon style={{ color: "white" }} />
@@ -68,7 +73,10 @@ const Navbar: React.FC = () => {
             <li onClick={() => auth.signOut()}>Log Out</li>
           </ul>
           <div className="userWellcoming">
-            <p onClick={() => navigate("/account")}> Welcome, {user?.displayName || "Guest"} </p>
+            <p onClick={() => navigate("/account")}>
+              {" "}
+              Welcome, {user?.displayName || "Guest"}{" "}
+            </p>
             <div className="user-icon">
               <PersonIcon />
             </div>

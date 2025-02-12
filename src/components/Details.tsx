@@ -1,12 +1,23 @@
 import React, { useState, useEffect } from "react";
 import { db } from "../services/firebaseConfig";
-import { collection, getDocs, query, where, addDoc, deleteDoc, doc, getDoc, setDoc , updateDoc } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  query,
+  where,
+  addDoc,
+  deleteDoc,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./styles/Details.css";
 import Navbar from "./navbar/Navbar";
 import Sidenav from "./navigation/Sidenav";
-import { Comment } from "../types/interfaces"; 
+import { Comment } from "../types/interfaces";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
@@ -23,7 +34,6 @@ const Details: React.FC = () => {
   const [savedPins, setSavedPins] = useState<string[]>([]);
   const [postUsername, setPostUsername] = useState<string>("Unknown");
 
-
   useEffect(() => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -38,7 +48,7 @@ const Details: React.FC = () => {
         try {
           const userRef = doc(db, "users", user.uid);
           const userSnap = await getDoc(userRef);
-  
+
           if (userSnap.exists()) {
             const userData = userSnap.data();
             setSavedPins(userData?.savedPins || []);
@@ -47,7 +57,7 @@ const Details: React.FC = () => {
           console.error("Error fetching saved pins:", error);
         }
       };
-  
+
       fetchSavedPins();
     }
   }, [user]);
@@ -75,18 +85,18 @@ const Details: React.FC = () => {
     const auth = getAuth();
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-  
+
       if (currentUser) {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
-  
+
         if (!userSnap.exists()) {
           // Tworzymy dokument użytkownika z pustą tablicą savedPins, jeśli jeszcze nie istnieje
           await setDoc(userRef, { savedPins: [] });
         }
       }
     });
-  
+
     return () => unsubscribe();
   }, []);
 
@@ -129,7 +139,6 @@ const Details: React.FC = () => {
     }
   };
 
-
   useEffect(() => {
     loadComments();
   }, [pin?.id]);
@@ -154,12 +163,15 @@ const Details: React.FC = () => {
       }
     };
 
-    if (!pin?.userId) { 
+    if (!pin?.userId) {
       fetchPost();
     }
   }, [pin]);
 
-  const handleDeleteComment = async (commentId: string, commentUserId: string) => {
+  const handleDeleteComment = async (
+    commentId: string,
+    commentUserId: string
+  ) => {
     if (!user || user.uid !== commentUserId) {
       alert("You can only delete your own comments!");
       return;
@@ -203,15 +215,22 @@ const Details: React.FC = () => {
 
     try {
       console.log("Deleting post:", pin);
-      const commentsQuery = query(collection(db, "comments"), where("pinId", "==", pin.id));
+      const commentsQuery = query(
+        collection(db, "comments"),
+        where("pinId", "==", pin.id)
+      );
       const querySnapshot = await getDocs(commentsQuery);
-      await Promise.all(querySnapshot.docs.map(commentDoc => deleteDoc(doc(db, "comments", commentDoc.id))));
+      await Promise.all(
+        querySnapshot.docs.map((commentDoc) =>
+          deleteDoc(doc(db, "comments", commentDoc.id))
+        )
+      );
 
       // Delete the post itself
       await deleteDoc(doc(db, "posts", pin.id));
 
       alert("Post deleted successfully!");
-      navigate("/main"); 
+      navigate("/main");
     } catch (error) {
       console.error("Error deleting post:", error);
       alert("An error occurred while deleting the post.");
@@ -219,17 +238,17 @@ const Details: React.FC = () => {
   };
 
   useEffect(() => {
-          const fetchLikes = async () => {
-              const postRef = doc(db, "posts", pin.id);
-              const postSnapshot = await getDoc(postRef);
-              if (postSnapshot.exists()) {
-                  const postData = postSnapshot.data();
-                  setLikes(postData?.likedBy?.length || 0);
-              }
-          };
-  
-          fetchLikes();
-      }, [pin.id]);
+    const fetchLikes = async () => {
+      const postRef = doc(db, "posts", pin.id);
+      const postSnapshot = await getDoc(postRef);
+      if (postSnapshot.exists()) {
+        const postData = postSnapshot.data();
+        setLikes(postData?.likedBy?.length || 0);
+      }
+    };
+
+    fetchLikes();
+  }, [pin.id]);
 
   // Debugging Logs
   useEffect(() => {
@@ -245,33 +264,34 @@ const Details: React.FC = () => {
   }
   console.log("Final pin.userId:", pin.userId);
 
-
   const handleSavePin = async () => {
     if (!user) {
       alert("You must be logged in to save a post.");
       return;
     }
-  
+
     try {
       const userRef = doc(db, "users", user.uid); // Dokument użytkownika
       const userSnap = await getDoc(userRef);
-  
+
       if (userSnap.exists()) {
         let savedPins = userSnap.data()?.savedPins || [];
-  
+
         // Sprawdzamy, czy pin już jest zapisany
         if (savedPins.includes(pin.id)) {
-          savedPins = savedPins.filter((savedPinId: string) => savedPinId !== pin.id);
+          savedPins = savedPins.filter(
+            (savedPinId: string) => savedPinId !== pin.id
+          );
         } else {
           savedPins.push(pin.id);
         }
-  
+
         // Aktualizujemy zapisane piny w dokumencie użytkownika
         await updateDoc(userRef, { savedPins });
-        
+
         // Ustawiamy zaktualizowaną tablicę zapisanych pinów w stanie
         setSavedPins(savedPins);
-  
+
         console.log(savedPins.includes(pin.id) ? "Pin saved!" : "Pin removed!");
       } else {
         console.log("User document not found.");
@@ -281,8 +301,6 @@ const Details: React.FC = () => {
       alert("An error occurred while saving the pin.");
     }
   };
-
-  
 
   return (
     <div className="container_navBar">
@@ -294,42 +312,48 @@ const Details: React.FC = () => {
         <div className="detailspage">
           <div className="details">
             <div className="imagedisplay">
-              <img src={pin.postImage} alt={pin.description || "Image description"} />
+              <img
+                src={pin.postImage}
+                alt={pin.description || "Image description"}
+              />
             </div>
             <div className="contentdisplay">
               {user && pin?.userId && user.uid === pin.userId && (
-                <button className="button delete-post-btn" onClick={handleDeletePost}>
+                <button
+                  className="button delete-post-btn"
+                  onClick={handleDeletePost}
+                >
                   🗑 Delete Post
                 </button>
               )}
 
-              
               {user && (
                 <div className="button_panel">
                   <button className="button" onClick={handleSavePin}>
                     {savedPins.includes(pin.id) ? "Unsave" : "Save"} Pin
                   </button>
-                    {hasLiked ? (
-                        // Jeśli post jest już polubiony przez użytkownika
-                        <button className="like-btn" onClick={handleLike}>
-                            <FavoriteIcon />
-                        </button>
-                    ) : (
-                        // Jeśli post nie jest polubiony przez użytkownika
-                        <button className="like-btn" onClick={handleLike}>
-                            <FavoriteBorderIcon />
-                        </button>
-                    )}
-                    <h3>Likes: {likes}</h3>
+                  {hasLiked ? (
+                    // Jeśli post jest już polubiony przez użytkownika
+                    <button className="like-btn" onClick={handleLike}>
+                      <FavoriteIcon />
+                    </button>
+                  ) : (
+                    // Jeśli post nie jest polubiony przez użytkownika
+                    <button className="like-btn" onClick={handleLike}>
+                      <FavoriteBorderIcon />
+                    </button>
+                  )}
+                  <h3>Likes: {likes}</h3>
                 </div>
-            )}
-              
+              )}
 
               <div className="image_description">
                 <h4>{pin.description}</h4>
               </div>
               <div className="username_date">
-                <h4>{postUsername} - {timestampDate.toLocaleDateString()}</h4>
+                <h4>
+                  {postUsername} - {timestampDate.toLocaleDateString()}
+                </h4>
               </div>
 
               <h4>Comments:</h4>
@@ -338,11 +362,14 @@ const Details: React.FC = () => {
                   <ul>
                     {comments.map((comment) => (
                       <li key={comment.id} className="photo__comment">
-                        <strong>{comment.username}: &nbsp; </strong> {comment.text}
+                        <strong>{comment.username}: &nbsp; </strong>{" "}
+                        {comment.text}
                         {user && user.uid === comment.userId && (
-                          <button 
+                          <button
                             className="delete-comment-btn"
-                            onClick={() => handleDeleteComment(comment.id, comment.userId)}
+                            onClick={() =>
+                              handleDeleteComment(comment.id, comment.userId)
+                            }
                           >
                             🗑 Delete
                           </button>
